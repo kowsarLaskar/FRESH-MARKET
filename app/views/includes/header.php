@@ -1,6 +1,10 @@
 <?php
-// 1. Get the current page name (e.g., 'index.php')
+// 1. Get the current page name for active link styling
 $current_page = basename($_SERVER['PHP_SELF']);
+
+// 2. Calculate Cart Count (Bonus Fix)
+// This counts the total quantity of all items in the session cart
+$cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'], 'qty')) : 0;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -47,15 +51,11 @@ $current_page = basename($_SERVER['PHP_SELF']);
             margin: 0 15px;
             transition: color 0.3s;
         }
-        /* Style for the Active/Highlighted link */
+        
         .nav-link:hover, .nav-link.active {
             color: var(--primary-green) !important;
-            font-weight: 400; /* Makes it Bold */
+            font-weight: 600; /* Made slightly bolder for visibility */
         }
-        /* Extra bold utility if needed */
-        /* .fw-bold {
-            font-weight: 700 !important;
-        } */
 
         .icon-btn {
             color: var(--primary-green);
@@ -82,13 +82,13 @@ $current_page = basename($_SERVER['PHP_SELF']);
         .mobile-nav-link {
             font-size: 1.5rem;
             font-weight: 700;
-            color: var(--primary-green); /* Default Color */
+            color: var(--primary-green); 
             text-decoration: none;
             display: block;
             margin-bottom: 20px;
-            opacity: 0.7; /* Dim inactive links slightly */
+            opacity: 0.7; 
         }
-        /* Active Mobile Link */
+
         .mobile-nav-link.active {
             opacity: 1;
             text-decoration: underline;
@@ -136,7 +136,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <div class="d-flex align-items-center d-lg-none gap-3">
                 <a href="<?php echo URLROOT; ?>/cart" class="icon-btn">
                     <i class="fas fa-shopping-bag fa-lg"></i>
-                    <span class="cart-badge">0</span>
+                    <span class="cart-badge"><?php echo $cart_count; ?></span>
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu">
                     <i class="fas fa-bars"></i>
@@ -165,12 +165,30 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
                 <div class="d-flex align-items-center gap-4 ms-auto">
                     <a href="#" class="icon-btn"><i class="fas fa-search"></i></a>
-                    <a href="<?php echo URLROOT; ?>/users/login" class="icon-btn d-flex align-items-center gap-2">
-                        <i class="fas fa-user-circle"></i> <span style="font-size:1rem;">Log In</span>
-                    </a>
+                    
+                    <?php if(isset($_SESSION['user_id'])): ?>
+                        <div class="dropdown">
+                            <a href="#" class="icon-btn d-flex align-items-center gap-2" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-check"></i> 
+                                <span style="font-size:1rem;">Hi, <?php echo explode(' ', $_SESSION['user_name'])[0]; ?></span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end border-0 shadow">
+                                <?php if($_SESSION['user_role'] == 'admin'): ?>
+                                    <li><a class="dropdown-item" href="<?php echo URLROOT; ?>/admin">Dashboard</a></li>
+                                <?php endif; ?>
+                                <li><a class="dropdown-item" href="<?php echo URLROOT; ?>/orders">My Orders</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="<?php echo URLROOT; ?>/users/logout">Logout</a></li>
+                            </ul>
+                        </div>
+                    <?php else: ?>
+                        <a href="<?php echo URLROOT; ?>/users/login" class="icon-btn d-flex align-items-center gap-2">
+                            <i class="fas fa-user-circle"></i> <span style="font-size:1rem;">Log In</span>
+                        </a>
+                    <?php endif; ?>
                     <a href="<?php echo URLROOT; ?>/cart" class="icon-btn">
                         <i class="fas fa-shopping-bag fa-lg"></i>
-                        <span class="cart-badge">0</span>
+                        <span class="cart-badge"><?php echo $cart_count; ?></span>
                     </a>
                 </div>
             </div>
@@ -189,10 +207,28 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <button type="button" class="btn-close fa-2x" data-bs-dismiss="offcanvas"></button>
     </div>
     <div class="offcanvas-body px-4">
-        <a href="<?php echo URLROOT; ?>/users/login" class="mobile-login">
-            <i class="fas fa-user-circle fa-lg"></i> Log In
-        </a>
-        <div class="d-flex flex-column">
+        
+        <?php if(isset($_SESSION['user_id'])): ?>
+            <div class="mb-4">
+                <div class="text-muted small mb-1">Signed in as</div>
+                <div class="fw-bold text-success mb-3"><?php echo $_SESSION['user_name']; ?></div>
+                
+                <?php if($_SESSION['user_role'] == 'admin'): ?>
+                    <a href="<?php echo URLROOT; ?>/admin" class="mobile-login mb-2">
+                        <i class="fas fa-th-large"></i> Dashboard
+                    </a>
+                <?php endif; ?>
+                
+                <a href="<?php echo URLROOT; ?>/users/logout" class="mobile-login text-danger">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        <?php else: ?>
+            <a href="<?php echo URLROOT; ?>/users/login" class="mobile-login">
+                <i class="fas fa-user-circle fa-lg"></i> Log In
+            </a>
+        <?php endif; ?>
+        <div class="d-flex flex-column border-top pt-4">
             <a href="<?php echo URLROOT; ?>" 
                class="mobile-nav-link <?php echo ($current_page == 'index.php') ? 'active text-success' : ''; ?>">Home</a>
             

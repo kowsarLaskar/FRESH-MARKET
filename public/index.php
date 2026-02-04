@@ -3,6 +3,7 @@
 session_start(); // <--- ADD THIS LINE AT THE TOP
 
 require_once '../app/helpers/session_helpers.php'; // <--- ADD THIS LINE TO LOAD THE SESSION HELPER
+require_once '../app/helpers/admin_helpers.php';
 
 
 // 1. Load the Configuration
