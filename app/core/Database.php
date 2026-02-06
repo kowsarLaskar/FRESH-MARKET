@@ -80,4 +80,9 @@ class Database {
     public function rowCount(){
         return $this->stmt->rowCount();
     }
+    // Get the ID of the last inserted row
+    // (Crucial for getting the Order ID to save items)
+    public function lastInsertId() {
+        return $this->dbh->lastInsertId();
+    }
 }

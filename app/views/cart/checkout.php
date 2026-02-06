@@ -15,5 +15,5 @@
     This is the checkout page. You can implement the checkout process here.
   </p>
 </body>
-<?php require_once '../views/inc/footer.php'; ?>
+<?php require_once '../views/includes/footer.php'; ?>
 </html>

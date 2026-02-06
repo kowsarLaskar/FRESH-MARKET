@@ -91,26 +91,26 @@
 <body>
 
     <div class="sidebar">
-        <a href="#" class="sidebar-brand">
+        <a href="<?php echo URLROOT; ?>/admin" class="sidebar-brand">
             <i class="fas fa-leaf me-2"></i>FRESH ADMIN
         </a>
         <nav class="nav flex-column">
-            <a href="<?php echo URLROOT; ?>/admin" class="nav-link active">
+            <a href="<?php echo URLROOT; ?>/admin" class="nav-link">
                 <i class="fas fa-th-large"></i> Dashboard
             </a>
-            <a href="<?php echo URLROOT; ?>/admin/products" class="nav-link">
+            <a href="<?php echo URLROOT; ?>/products" class="nav-link active">
                 <i class="fas fa-box"></i> Products
             </a>
-            <a href="<?php echo URLROOT; ?>/admin/categories" class="nav-link">
+            <a href="<?php echo URLROOT; ?>/categories" class="nav-link">
                 <i class="fas fa-list"></i> Categories
             </a>
-            <a href="<?php echo URLROOT; ?>/admin/orders" class="nav-link">
+            <a href="<?php echo URLROOT; ?>/adminOrders" class="nav-link">
                 <i class="fas fa-shopping-cart"></i> Orders
             </a>
-            <a href="<?php echo URLROOT; ?>/admin/delivery" class="nav-link">
+            <a href="<?php echo URLROOT; ?>/delivery" class="nav-link">
                 <i class="fas fa-truck"></i> Delivery Mgmt
             </a>
-            <a href="<?php echo URLROOT; ?>/admin/users" class="nav-link">
+            <a href="<?php echo URLROOT; ?>/users" class="nav-link">
                 <i class="fas fa-users"></i> Users
             </a>
             <a href="<?php echo URLROOT; ?>/users/logout" class="nav-link mt-5">

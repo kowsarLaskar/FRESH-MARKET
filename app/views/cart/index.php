@@ -250,7 +250,9 @@
                             <span><?php echo CURRENCY . number_format($data['subtotal'], 2); ?></span>
                         </div>
 
-                        <button class="btn-checkout">Checkout</button>
+                        <a href="<?php echo URLROOT; ?>/checkout" class="btn-checkout text-decoration-none d-block text-center">
+                            Checkout
+                        </a>
                         
                         <div class="text-center mt-3 text-muted" style="font-size: 0.8rem;">
                             <i class="fas fa-lock me-1"></i> Secure Checkout
