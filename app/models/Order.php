@@ -6,10 +6,7 @@ class Order {
         $this->db = new Database;
     }
 
-    // =========================================================
-    // CUSTOMER FUNCTIONS (Checkout & My Orders)
-    // =========================================================
-
+   
     // 1. Create the Main Order (Header)
     public function createOrder($data) {
         $this->db->query('INSERT INTO orders (user_id, total_amount, payment_mode, payment_status, order_status, delivery_address) 
