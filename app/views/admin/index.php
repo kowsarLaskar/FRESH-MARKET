@@ -58,7 +58,10 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.02);
             border: none;
             height: 100%;
+            transition: transform 0.2s;
         }
+        .stat-card:hover { transform: translateY(-5px); }
+        
         .stat-icon {
             width: 50px;
             height: 50px;
@@ -73,6 +76,8 @@
         .bg-icon-blue { background-color: #e3f2fd; color: #1565c0; }
         .bg-icon-orange { background-color: #fff3e0; color: #ef6c00; }
         .bg-icon-red { background-color: #ffebee; color: #c62828; }
+        /* NEW COLOR for Delivery Boy */
+        .bg-icon-purple { background-color: #f3e5f5; color: #7b1fa2; }
 
         .stat-value { font-size: 1.8rem; font-weight: 700; color: #333; }
         .stat-label { color: #666; font-size: 0.9rem; }
@@ -90,68 +95,56 @@
 </head>
 <body>
 
-    <div class="sidebar">
-        <a href="<?php echo URLROOT; ?>/admin" class="sidebar-brand">
-            <i class="fas fa-leaf me-2"></i>FRESH ADMIN
-        </a>
-        <nav class="nav flex-column">
-            <a href="<?php echo URLROOT; ?>/admin" class="nav-link">
-                <i class="fas fa-th-large"></i> Dashboard
-            </a>
-            <a href="<?php echo URLROOT; ?>/products" class="nav-link active">
-                <i class="fas fa-box"></i> Products
-            </a>
-            <a href="<?php echo URLROOT; ?>/categories" class="nav-link">
-                <i class="fas fa-list"></i> Categories
-            </a>
-            <a href="<?php echo URLROOT; ?>/adminOrders" class="nav-link">
-                <i class="fas fa-shopping-cart"></i> Orders
-            </a>
-            <a href="<?php echo URLROOT; ?>/delivery" class="nav-link">
-                <i class="fas fa-truck"></i> Delivery Mgmt
-            </a>
-            <a href="<?php echo URLROOT; ?>/users" class="nav-link">
-                <i class="fas fa-users"></i> Users
-            </a>
-            <a href="<?php echo URLROOT; ?>/users/logout" class="nav-link mt-5">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </a>
-        </nav>
-    </div>
+    <?php require APPROOT . '/views/includes/admin_sidebar.php'; ?>
 
     <div class="main-content">
         
         <h2 class="fw-bold mb-4" style="color:#1F4D3C;">Overview</h2>
 
         <div class="row g-4 mb-4">
-            <div class="col-md-3">
+            
+            <div class="col-md-6 col-lg-4 col-xl">
                 <div class="stat-card">
                     <div class="stat-icon bg-icon-green"><i class="fas fa-dollar-sign"></i></div>
-                    <div class="stat-value">$<?php echo number_format($data['revenue'], 2); ?></div>
+                    <div class="stat-value">₹<?php echo number_format($data['revenue'], 2); ?></div>
                     <div class="stat-label">Total Revenue</div>
                 </div>
             </div>
-            <div class="col-md-3">
+
+            <div class="col-md-6 col-lg-4 col-xl">
                 <div class="stat-card">
                     <div class="stat-icon bg-icon-blue"><i class="fas fa-shopping-bag"></i></div>
                     <div class="stat-value"><?php echo $data['total_orders']; ?></div>
                     <div class="stat-label">Total Orders</div>
                 </div>
             </div>
-            <div class="col-md-3">
+
+            <div class="col-md-6 col-lg-4 col-xl">
                 <div class="stat-card">
                     <div class="stat-icon bg-icon-orange"><i class="fas fa-user-friends"></i></div>
                     <div class="stat-value"><?php echo $data['total_users']; ?></div>
                     <div class="stat-label">Active Customers</div>
                 </div>
             </div>
-            <div class="col-md-3">
+
+            <div class="col-md-6 col-lg-4 col-xl">
+                <div class="stat-card">
+                    <div class="stat-icon bg-icon-purple"><i class="fas fa-motorcycle"></i></div>
+                    <div class="stat-value">
+                        <?php echo isset($data['delivery_boys_count']) ? $data['delivery_boys_count'] : 0; ?>
+                    </div>
+                    <div class="stat-label">Delivery Staff</div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4 col-xl">
                 <div class="stat-card">
                     <div class="stat-icon bg-icon-red"><i class="fas fa-exclamation-triangle"></i></div>
                     <div class="stat-value"><?php echo count($data['low_stock']); ?></div>
                     <div class="stat-label">Low Stock Items</div>
                 </div>
             </div>
+
         </div>
 
         <div class="row">
@@ -159,7 +152,7 @@
                 <div class="admin-table-card">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h5 class="table-title mb-0">Recent Orders</h5>
-                        <a href="<?php echo URLROOT; ?>/admin/orders" class="btn btn-sm btn-outline-dark">View All</a>
+                        <a href="<?php echo URLROOT; ?>/adminOrders" class="btn btn-sm btn-outline-dark">View All</a>
                     </div>
                     
                     <div class="table-responsive">
@@ -184,21 +177,21 @@
                                         <td>$<?php echo number_format($order->total_amount, 2); ?></td>
                                         <td>
                                             <?php 
-                                                // Dynamic Status Badges
                                                 $statusClass = 'bg-secondary';
                                                 $statusText = $order->order_status;
                                                 
                                                 if($statusText == 'delivered') $statusClass = 'bg-success';
-                                                if($statusText == 'pending') $statusClass = 'bg-warning text-dark';
-                                                if($statusText == 'cancelled') $statusClass = 'bg-danger';
-                                                if($statusText == 'out_for_delivery') $statusClass = 'bg-info text-dark';
+                                                elseif($statusText == 'pending') $statusClass = 'bg-warning text-dark';
+                                                elseif($statusText == 'cancelled') $statusClass = 'bg-danger';
+                                                elseif($statusText == 'out_for_delivery') $statusClass = 'bg-info text-dark';
+                                                elseif($statusText == 'processing') $statusClass = 'bg-primary';
                                             ?>
                                             <span class="badge <?php echo $statusClass; ?>">
                                                 <?php echo ucfirst(str_replace('_', ' ', $statusText)); ?>
                                             </span>
                                         </td>
                                         <td>
-                                            <button class="btn btn-sm btn-light border"><i class="fas fa-eye"></i></button>
+                                            <a href="<?php echo URLROOT; ?>/adminOrders/show/<?php echo $order->order_id; ?>" class="btn btn-sm btn-light border"><i class="fas fa-eye"></i></a>
                                         </td>
                                     </tr>
                                     <?php endforeach; ?>
@@ -213,7 +206,10 @@
                 <div class="admin-table-card">
                     <h5 class="table-title">Inventory Alerts</h5>
                     <?php if(empty($data['low_stock'])): ?>
-                        <p class="text-muted text-center py-3"><i class="fas fa-check-circle text-success me-2"></i> Stock is healthy!</p>
+                        <div class="text-center py-4">
+                            <i class="fas fa-check-circle text-success fa-2x mb-2"></i>
+                            <p class="text-muted mb-0">Stock is healthy!</p>
+                        </div>
                     <?php else: ?>
                         <ul class="list-group list-group-flush">
                             <?php foreach($data['low_stock'] as $item): ?>

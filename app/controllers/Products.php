@@ -35,6 +35,7 @@ class Products extends Controller {
             }
 
             $data = [
+                'nav' => 'dashboard',
                 'category_id' => trim($_POST['category_id']),
                 'name' => trim($_POST['name']),
                 'description' => trim($_POST['description']),

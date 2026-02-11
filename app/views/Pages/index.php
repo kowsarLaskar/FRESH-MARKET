@@ -130,7 +130,7 @@ require_once '../app/views/includes/header.php';
             <?php foreach($data['deals'] as $product): ?>
             <div class="item">
                 <div class="product-card position-relative text-center">
-                    <form action="<?php echo URLROOT; ?>/cart/add" method="POST">
+                    <form action="<?php echo URLROOT; ?>/cart/add" method="POST" class="add-cart-form">
                         <input type="hidden" name="product_id" value="<?php echo $product->product_id; ?>">
                         <div class="badge-special">Special Price</div>
                         <a href="<?php echo URLROOT; ?>/shop/product/<?php echo $product->product_id; ?>" class="product-img-wrapper">
@@ -188,7 +188,7 @@ require_once '../app/views/includes/header.php';
                 <?php foreach($data['grab_n_go'] as $product): ?>
                 <div class="col-12 col-sm-6 col-lg-3">
                     <div class="product-card position-relative text-center ">
-                        <form action="<?php echo URLROOT; ?>/cart/add" method="POST">
+                        <form action="<?php echo URLROOT; ?>/cart/add" method="POST" class="add-cart-form">
                             <input type="hidden" name="product_id" value="<?php echo $product->product_id; ?>">
                             <a href="<?php echo URLROOT; ?>/shop/product/<?php echo $product->product_id; ?>" class="product-img-wrapper">
                                 <img src="<?php echo URLROOT; ?>/assets/products/<?php echo $product->image; ?>" alt="<?php echo $product->name; ?>">
@@ -261,7 +261,7 @@ require_once '../app/views/includes/header.php';
             </div>
             <h4 class="feature-title">Same Day Delivery</h4>
             <p class="feature-text text-muted">
-               Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nam perferendis asperiores nemo, obcaecati libero aliquam fugiat debitis provident unde soluta vel labore dolorem id, sint recusandae
+               Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nam perferendis asperiores nemo, obcaecati libero aliquam fugiat debitis provident unde soluta vel labore dolorem id, sint recusandae lorem ipsum dolar sit amet consecuter adipisicing elit. Nam preferendis asperiores nemo
             </p>
         </div>
 
@@ -299,6 +299,50 @@ require_once '../app/views/includes/header.php';
             input.value = parseInt(input.value) - 1;
         }
     }
+
+    // UPDATE 3: AJAX Add to Cart Script
+    document.addEventListener('DOMContentLoaded', function() {
+        const forms = document.querySelectorAll('.add-cart-form');
+
+        forms.forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault(); 
+
+                const button = form.querySelector('button[type="submit"]');
+                const originalText = button.innerHTML; 
+
+                const headers = { 'X-Requested-With': 'XMLHttpRequest' };
+                const formData = new FormData(this);
+
+                fetch(this.action, {
+                    method: 'POST',
+                    headers: headers, 
+                    body: formData
+                })
+                .then(response => response.json()) 
+                .then(data => {
+                    // Update BOTH Mobile and Desktop Cart Icons
+                    const desktopBadge = document.getElementById('cart-count');
+                    const mobileBadge = document.getElementById('mobile-cart-count');
+
+                    if (desktopBadge) desktopBadge.innerText = data.new_count;
+                    if (mobileBadge) mobileBadge.innerText = data.new_count;
+
+                    // Visual Feedback
+                    button.innerHTML = "ADDED!";
+                    button.style.backgroundColor = "#000"; 
+                    button.style.color = "#fff";
+                    
+                    setTimeout(() => {
+                        button.innerHTML = originalText;
+                        button.style.backgroundColor = ""; 
+                        button.style.color = "";
+                    }, 2000);
+                })
+                .catch(error => console.error('Error:', error));
+            });
+        });
+    });
 </script>
 
 <?php require_once '../app/views/includes/footer.php'; ?>

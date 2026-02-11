@@ -44,7 +44,9 @@ class User {
         } else {
             return false; // User not found
         }
+        
     }
+    
 
     // 3. FIND USER BY EMAIL (Check for duplicates)
     public function findUserByEmail($email) {
@@ -59,5 +61,12 @@ class User {
         } else {
             return false;
         }
+    }
+
+    // Get a list of users based on their role (e.g., 'delivery_boy')
+    public function getUsersByRole($role) {
+        $this->db->query("SELECT * FROM users WHERE role = :role");
+        $this->db->bind(':role', $role);
+        return $this->db->resultSet();
     }
 }

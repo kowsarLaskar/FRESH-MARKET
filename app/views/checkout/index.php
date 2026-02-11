@@ -76,15 +76,17 @@
         </div>
 
         <div class="col-md-4">
-            <div class="card shadow-sm border-0 bg-light">
+            <div class="card shadow-sm border-0 bg-light" style="position: sticky; top: 20px;">
                 <div class="card-body p-4">
                     <h5 class="fw-bold mb-3">Order Summary</h5>
+                    
                     <?php foreach($data['cart_items'] as $item): ?>
                         <div class="d-flex justify-content-between mb-2 small">
                             <span><?php echo $item['name']; ?> (x<?php echo $item['qty']; ?>)</span>
                             <span class="fw-bold">₹<?php echo number_format($item['selling_price'] * $item['qty'], 2); ?></span>
                         </div>
                     <?php endforeach; ?>
+                    
                     <hr>
                     <div class="d-flex justify-content-between fs-5 fw-bold text-success">
                         <span>Total</span>

@@ -7,11 +7,14 @@ class Dashboard {
     }
 
     // 1. Get Total Revenue
+    // Calculate Net Revenue (Total Sales - Driver Fees)
     public function getTotalRevenue() {
-        // Matches your 'orders' table schema
-        $this->db->query("SELECT SUM(total_amount) as total FROM orders WHERE payment_status = 'paid'");
+        // We only count DELIVERED orders
+        $this->db->query("SELECT SUM(total_amount - driver_fee) as net_revenue FROM orders WHERE order_status = 'delivered'");
+        
         $row = $this->db->single();
-        return $row->total ?? 0;
+        
+        return $row->net_revenue ? $row->net_revenue : 0;
     }
 
     // 2. Get Total Orders Count
@@ -45,5 +48,12 @@ class Dashboard {
                           ORDER BY orders.order_date DESC 
                           LIMIT 5");
         return $this->db->resultSet();
+    }
+    // Get count of users by specific role (e.g., 'delivery_boy')
+    public function countUsersByRole($role) {
+        $this->db->query("SELECT COUNT(*) as count FROM users WHERE role = :role");
+        $this->db->bind(':role', $role);
+        $row = $this->db->single();
+        return $row->count;
     }
 }

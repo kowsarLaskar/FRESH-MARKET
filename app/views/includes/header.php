@@ -1,9 +1,24 @@
 <?php
-// 1. Get the current page name for active link styling
-$current_page = basename($_SERVER['PHP_SELF']);
+// 1. Get the current URL path to check which page is active
+$uri = $_SERVER['REQUEST_URI'];
 
-// 2. Calculate Cart Count (Bonus Fix)
-// This counts the total quantity of all items in the session cart
+// 2. Define Active States
+// Check if URL contains specific keywords
+$shop_active    = (strpos($uri, '/shop') !== false) ? 'active' : '';
+$about_active   = (strpos($uri, '/about') !== false) ? 'active' : '';
+$contact_active = (strpos($uri, '/contact') !== false) ? 'active' : '';
+
+// Home is active if we are NOT on any other known page (Shop, Admin, Users, Cart, etc.)
+$home_active = '';
+if ($shop_active == '' && $about_active == '' && $contact_active == '' && 
+    strpos($uri, '/admin') === false && 
+    strpos($uri, '/users') === false && 
+    strpos($uri, '/cart') === false && 
+    strpos($uri, '/orders') === false) {
+    $home_active = 'active';
+}
+
+// 3. Calculate Cart Count
 $cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'], 'qty')) : 0;
 ?>
 <!DOCTYPE html>
@@ -54,7 +69,7 @@ $cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'
         
         .nav-link:hover, .nav-link.active {
             color: var(--primary-green) !important;
-            font-weight: 600; /* Made slightly bolder for visibility */
+            font-weight: 600;
         }
 
         .icon-btn {
@@ -136,7 +151,7 @@ $cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'
             <div class="d-flex align-items-center d-lg-none gap-3">
                 <a href="<?php echo URLROOT; ?>/cart" class="icon-btn">
                     <i class="fas fa-shopping-bag fa-lg"></i>
-                    <span class="cart-badge"><?php echo $cart_count; ?></span>
+                    <span class="cart-badge" id="mobile-cart-count"><?php echo $cart_count; ?></span>
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu">
                     <i class="fas fa-bars"></i>
@@ -146,20 +161,16 @@ $cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'
             <div class="collapse navbar-collapse" id="desktopMenu">
                 <ul class="navbar-nav centered-nav">
                     <li class="nav-item">
-                        <a class="nav-link <?php echo ($current_page == 'index.php') ? 'active' : ''; ?>" 
-                           href="<?php echo URLROOT; ?>">Home</a>
+                        <a class="nav-link <?php echo $home_active; ?>" href="<?php echo URLROOT; ?>">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?php echo ($current_page == 'shop.php') ? 'active' : ''; ?>" 
-                           href="<?php echo URLROOT; ?>/shop">Shop</a>
+                        <a class="nav-link <?php echo $shop_active; ?>" href="<?php echo URLROOT; ?>/shop">Shop</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?php echo ($current_page == 'about.php') ? 'active' : ''; ?>" 
-                           href="#">About</a>
+                        <a class="nav-link <?php echo $about_active; ?>" href="#">About</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?php echo ($current_page == 'contact.php') ? 'active' : ''; ?>" 
-                           href="#">Contact</a>
+                        <a class="nav-link <?php echo $contact_active; ?>" href="#">Contact</a>
                     </li>
                 </ul>
 
@@ -175,6 +186,8 @@ $cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'
                             <ul class="dropdown-menu dropdown-menu-end border-0 shadow">
                                 <?php if($_SESSION['user_role'] == 'admin'): ?>
                                     <li><a class="dropdown-item" href="<?php echo URLROOT; ?>/admin">Dashboard</a></li>
+                                <?php elseif($_SESSION['user_role'] == 'delivery_boy'): ?>
+                                    <li><a class="dropdown-item" href="<?php echo URLROOT; ?>/delivery">Delivery Panel</a></li>
                                 <?php endif; ?>
                                 <li><a class="dropdown-item" href="<?php echo URLROOT; ?>/orders">My Orders</a></li>
                                 <li><hr class="dropdown-divider"></li>
@@ -186,9 +199,10 @@ $cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'
                             <i class="fas fa-user-circle"></i> <span style="font-size:1rem;">Log In</span>
                         </a>
                     <?php endif; ?>
+                    
                     <a href="<?php echo URLROOT; ?>/cart" class="icon-btn">
                         <i class="fas fa-shopping-bag fa-lg"></i>
-                        <span class="cart-badge"><?php echo $cart_count; ?></span>
+                        <span class="cart-badge" id="cart-count"><?php echo $cart_count; ?></span>
                     </a>
                 </div>
             </div>
@@ -228,15 +242,12 @@ $cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'
                 <i class="fas fa-user-circle fa-lg"></i> Log In
             </a>
         <?php endif; ?>
+        
         <div class="d-flex flex-column border-top pt-4">
-            <a href="<?php echo URLROOT; ?>" 
-               class="mobile-nav-link <?php echo ($current_page == 'index.php') ? 'active text-success' : ''; ?>">Home</a>
-            
-            <a href="<?php echo URLROOT; ?>/shop" 
-               class="mobile-nav-link <?php echo ($current_page == 'shop.php') ? 'active text-success' : ''; ?>">Shop</a>
-            
-            <a href="#" class="mobile-nav-link">About</a>
-            <a href="#" class="mobile-nav-link">Contact</a>
+            <a href="<?php echo URLROOT; ?>" class="mobile-nav-link <?php echo ($home_active == 'active') ? 'active text-success' : ''; ?>">Home</a>
+            <a href="<?php echo URLROOT; ?>/shop" class="mobile-nav-link <?php echo ($shop_active == 'active') ? 'active text-success' : ''; ?>">Shop</a>
+            <a href="#" class="mobile-nav-link <?php echo ($about_active == 'active') ? 'active text-success' : ''; ?>">About</a>
+            <a href="#" class="mobile-nav-link <?php echo ($contact_active == 'active') ? 'active text-success' : ''; ?>">Contact</a>
         </div>
     </div>
 </div>

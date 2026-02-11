@@ -186,46 +186,57 @@
         </div>
     </div>
 </div>
-</div> <script>
-    // 1. Select all forms with the class 'add-cart-form'
-    const forms = document.querySelectorAll('.add-cart-form');
+</div> <!-- End of Main Container -->
+<script>
+    // Wait for the HTML to be fully loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const forms = document.querySelectorAll('.add-cart-form');
 
-    forms.forEach(form => {
-        form.addEventListener('submit', function(e) {
-            // 2. Prevent the default form submission
-            e.preventDefault();
+        forms.forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault(); 
 
-            // 3. Get the button so we can change text (Optional feedback)
-            const button = form.querySelector('button[type="submit"]');
-            const originalText = button.innerText;
+                const button = form.querySelector('button[type="submit"]');
+                const originalText = button.innerText;
 
-            // 4. Create data payload
-            const formData = new FormData(this);
+                // 1. Add this header so PHP knows it's an AJAX request
+                const headers = {
+                    'X-Requested-With': 'XMLHttpRequest'
+                };
 
-            // 5. Send data to server using Fetch API (AJAX)
-            fetch(this.action, {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                // The item is now added to the session in the background!
-                
-                // Visual Feedback: Change button text briefly
-                button.innerText = "Added!";
-                button.style.backgroundColor = "#1F4D3C"; // Dark Green
-                button.style.color = "#fff";
-                
-                // Reset button after 2 seconds
-                setTimeout(() => {
-                    button.innerText = originalText;
-                    button.style.backgroundColor = "transparent";
-                    button.style.color = "#333";
-                }, 2000);
-            })
-            .catch(error => console.error('Error:', error));
+                const formData = new FormData(this);
+
+                fetch(this.action, {
+                    method: 'POST',
+                    headers: headers, 
+                    body: formData
+                })
+                .then(response => response.json()) 
+                .then(data => {
+                    // 2. Update BOTH Cart Icons (Mobile & Desktop)
+                    const desktopBadge = document.getElementById('cart-count');
+                    const mobileBadge = document.getElementById('mobile-cart-count');
+
+                    if (desktopBadge) desktopBadge.innerText = data.new_count;
+                    if (mobileBadge) mobileBadge.innerText = data.new_count;
+
+                    // 3. Visual Feedback
+                    button.innerText = "Added!";
+                    button.style.backgroundColor = "#1F4D3C"; 
+                    button.style.color = "#fff";
+                    
+                    setTimeout(() => {
+                        button.innerText = originalText;
+                        button.style.backgroundColor = ""; 
+                        button.style.color = "";
+                    }, 2000);
+                })
+                .catch(error => console.error('Error:', error));
+            });
         });
+
     });
 </script>
-
 <?php require_once '../app/views/includes/footer.php'; ?>
 

@@ -1,6 +1,7 @@
 <?php
 class Users extends Controller {
     private $userModel;
+    
     public function __construct() {
         $this->userModel = $this->model('User');
     }
@@ -142,8 +143,8 @@ class Users extends Controller {
                 $loggedInUser = $this->userModel->login($data['email'], $data['password']);
 
                 if($loggedInUser) {
-                    // Create Session
-                    createUserSession($loggedInUser);
+                    // Create Session (UPDATED: Calling the internal method)
+                    $this->createUserSession($loggedInUser);
                 } else {
                     $data['password_err'] = 'Password incorrect';
                     $this->view('users/login', $data);
@@ -164,6 +165,25 @@ class Users extends Controller {
 
             // Load view
             $this->view('users/login', $data);
+        }
+    }
+
+    // NEW FUNCTION: Handles Redirection based on Role
+    public function createUserSession($user) {
+        $_SESSION['user_id'] = $user->user_id;
+        $_SESSION['user_email'] = $user->email;
+        $_SESSION['user_name'] = $user->full_name;
+        $_SESSION['user_role'] = $user->role; // Save the role
+
+        // Redirect based on Role
+        if ($user->role == 'admin') {
+            redirect('adminOrders'); 
+        } 
+        elseif ($user->role == 'delivery_boy') {
+            redirect('delivery'); 
+        } 
+        else {
+            redirect('pages/index'); 
         }
     }
 

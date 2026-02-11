@@ -22,34 +22,7 @@
 </head>
 <body>
 
-    <div class="sidebar">
-        <a href="<?php echo URLROOT; ?>/admin" class="sidebar-brand">
-            <i class="fas fa-leaf me-2"></i>FRESH ADMIN
-        </a>
-        <nav class="nav flex-column">
-            <a href="<?php echo URLROOT; ?>/admin" class="nav-link">
-                <i class="fas fa-th-large"></i> Dashboard
-            </a>
-            <a href="<?php echo URLROOT; ?>/products" class="nav-link active">
-                <i class="fas fa-box"></i> Products
-            </a>
-            <a href="<?php echo URLROOT; ?>/categories" class="nav-link">
-                <i class="fas fa-list"></i> Categories
-            </a>
-            <a href="<?php echo URLROOT; ?>/adminOrders" class="nav-link active">
-                <i class="fas fa-shopping-cart"></i> Orders
-            </a>
-            <a href="<?php echo URLROOT; ?>/delivery" class="nav-link">
-                <i class="fas fa-truck"></i> Delivery Mgmt
-            </a>
-            <a href="<?php echo URLROOT; ?>/users" class="nav-link">
-                <i class="fas fa-users"></i> Users
-            </a>
-            <a href="<?php echo URLROOT; ?>/users/logout" class="nav-link mt-5">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </a>
-        </nav>
-    </div>
+    <?php require APPROOT . '/views/includes/admin_sidebar.php'; ?>
 
     <div class="main-content">
         <h2 class="fw-bold mb-4" style="color:#1F4D3C;">Order Management</h2>

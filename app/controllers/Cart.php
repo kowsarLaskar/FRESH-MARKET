@@ -25,16 +25,20 @@ class Cart extends Controller {
 
     public function add() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // 1. Get Form Data
             $product_id = (int)$_POST['product_id'];
-            $qty = (int)$_POST['qty'];
+            $qty = isset($_POST['qty']) ? (int)$_POST['qty'] : 1; // Default to 1 if not sent
 
+            // 2. Fetch Product
             $product = $this->productModel->findProductById($product_id);
 
             if ($product) {
+                // Initialize Cart if empty
                 if (!isset($_SESSION['cart'])) {
                     $_SESSION['cart'] = [];
                 }
 
+                // Add or Update Item in Cart
                 if (isset($_SESSION['cart'][$product_id])) {
                     $_SESSION['cart'][$product_id]['qty'] += $qty;
                 } else {
@@ -46,9 +50,24 @@ class Cart extends Controller {
                         'qty' => $qty
                     ];
                 }
+
+                // 3. Calculate New Total Count (For the Badge)
+                $totalQty = 0;
+                foreach ($_SESSION['cart'] as $item) {
+                    $totalQty += $item['qty'];
+                }
+
+                // 4. CHECK FOR AJAX (This is the new part)
+                // If JavaScript sent this request, return JSON and STOP.
+                if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+                    header('Content-Type: application/json');
+                    echo json_encode(['status' => 'success', 'new_count' => $totalQty]);
+                    exit; // Stop here so the page doesn't reload
+                }
             }
         }
-        // FIX: Redirect back to the previous page (Shop) instead of Cart
+
+        // 5. Fallback: Redirect back (For non-JS users)
         $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : URLROOT . '/shop';
         header('location: ' . $referer);
     }

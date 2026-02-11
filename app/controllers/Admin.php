@@ -15,11 +15,13 @@ class Admin extends Controller {
     public function index() {
         // 3. Fetch Data for the Dashboard
         $data = [
+            'nav' => 'dashboard',
             'revenue' => $this->adminModel->getTotalRevenue(),
             'total_orders' => $this->adminModel->getTotalOrders(),
             'total_users' => $this->adminModel->getTotalUsers(),
             'low_stock' => $this->adminModel->getLowStockProducts(),
-            'recent_orders' => $this->adminModel->getRecentOrders()
+            'recent_orders' => $this->adminModel->getRecentOrders(),
+            'delivery_boys_count' => $this->adminModel->countUsersByRole('delivery_boy'),
         ];
 
         // 4. Load the View
