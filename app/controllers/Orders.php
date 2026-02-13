@@ -48,4 +48,34 @@ class Orders extends Controller {
 
         $this->view('orders/details', $data);
     }
+
+    // Generate Printable Invoice for Customer
+    public function invoice($id) {
+        // 1. Must be logged in
+        if (!isLoggedIn()) {
+            redirect('users/login');
+        }
+
+        $order = $this->orderModel->getOrderById($id);
+
+        // 2. SECURITY: Does this order exist AND belong to this user?
+        if (!$order || $order->user_id != $_SESSION['user_id']) {
+            redirect('orders');
+        }
+
+        // 3. SECURITY: Is it actually delivered?
+        if ($order->order_status != 'delivered') {
+            redirect('orders/details/' . $id);
+        }
+
+        $items = $this->orderModel->getOrderItems($id);
+
+        $data = [
+            'order' => $order,
+            'items' => $items
+        ];
+
+        // Load the standalone invoice view
+        $this->view('orders/invoice', $data);
+    }
 }

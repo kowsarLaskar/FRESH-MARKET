@@ -282,4 +282,42 @@ class Order {
         
         return $this->db->execute();
     }
+
+    
+   // Get Orders with Dynamic Filters
+    public function getFilteredOrders($filters = []) {
+        // ADDED 'users.phone' to the SELECT statement
+        $sql = "SELECT orders.*, users.full_name, users.phone 
+                FROM orders 
+                LEFT JOIN users ON orders.user_id = users.user_id 
+                WHERE 1=1"; 
+        
+        // Append conditions dynamically
+        if (!empty($filters['order_id'])) {
+            $sql .= " AND orders.order_id = :order_id";
+        }
+        if (!empty($filters['status']) && $filters['status'] != 'all') {
+            $sql .= " AND orders.order_status = :status";
+        }
+        if (!empty($filters['date'])) {
+            $sql .= " AND DATE(orders.order_date) = :date";
+        }
+        
+        $sql .= " ORDER BY orders.order_date DESC";
+        
+        $this->db->query($sql);
+        
+        // Bind values securely
+        if (!empty($filters['order_id'])) {
+            $this->db->bind(':order_id', $filters['order_id']);
+        }
+        if (!empty($filters['status']) && $filters['status'] != 'all') {
+            $this->db->bind(':status', $filters['status']);
+        }
+        if (!empty($filters['date'])) {
+            $this->db->bind(':date', $filters['date']);
+        }
+        
+        return $this->db->resultSet();
+    }
 }

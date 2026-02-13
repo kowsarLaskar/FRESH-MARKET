@@ -13,11 +13,23 @@ class AdminOrders extends Controller {
     }
 
     // 1. List All Orders
+    // 1. List All Orders (WITH FILTERS)
     public function index() {
-        $orders = $this->orderModel->getAllOrders();
         
+        // 1. Capture GET variables if they exist (Default to empty/all)
+        $filters = [
+            'order_id' => $_GET['order_id'] ?? '',
+            'status'   => $_GET['status'] ?? 'all',
+            'date'     => $_GET['date'] ?? ''
+        ];
+
+        // 2. Fetch the filtered data
+        $orders = $this->orderModel->getFilteredOrders($filters);
+        
+        // 3. Pass data and the active filters back to the view
         $data = [
-            'orders' => $orders
+            'orders'  => $orders,
+            'filters' => $filters
         ];
 
         $this->view('admin/orders/index', $data);
@@ -81,5 +93,21 @@ class AdminOrders extends Controller {
         ];
 
         $this->view('admin/orders/details', $data);
+    }
+
+    // Generate Printable Invoice
+    public function invoice($id) {
+        $order = $this->orderModel->getOrderById($id);
+        if (!$order) { redirect('adminOrders'); }
+
+        $items = $this->orderModel->getOrderItems($id);
+
+        $data = [
+            'order' => $order,
+            'items' => $items
+        ];
+
+        // Notice: We don't load headers or footers here! Just the pure invoice.
+        $this->view('admin/orders/invoice', $data);
     }
 }

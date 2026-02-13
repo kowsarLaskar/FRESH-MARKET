@@ -6,8 +6,30 @@
             <h2 class="fw-bold mb-1">Order #<?php echo $data['order']->order_id; ?></h2>
             <span class="text-muted">Placed on <?php echo date('F d, Y h:i A', strtotime($data['order']->order_date)); ?></span>
         </div>
-        <a href="<?php echo URLROOT; ?>/orders" class="btn btn-outline-secondary">Back to Orders</a>
+        <div>
+            <?php if($data['order']->order_status == 'delivered'): ?>
+                <a href="<?php echo URLROOT; ?>/orders/invoice/<?php echo $data['order']->order_id; ?>" target="_blank" class="btn btn-dark me-2">
+                    <i class="fas fa-print me-2"></i> Invoice
+                </a>
+            <?php endif; ?>
+            
+            <a href="<?php echo URLROOT; ?>/orders" class="btn btn-outline-secondary">Back to Orders</a>
+        </div>
     </div>
+
+    <?php if($data['order']->order_status == 'cancelled'): ?>
+        <div class="alert alert-danger shadow-sm border-danger border-2 d-flex align-items-center mb-4">
+            <i class="fas fa-exclamation-circle fa-2x me-3"></i>
+            <div>
+                <h5 class="fw-bold mb-1 text-danger">Delivery Cancelled</h5>
+                <p class="mb-0 text-dark">
+                    <strong>Reason:</strong> 
+                    <?php echo !empty($data['order']->cancellation_reason) ? $data['order']->cancellation_reason : 'We apologize, but your order could not be completed.'; ?>
+                </p>
+                <small class="text-muted mt-1 d-block">If you have already paid online, your refund will be processed shortly.</small>
+            </div>
+        </div>
+    <?php endif; ?>
 
     <div class="row">
         <div class="col-md-8">
@@ -18,6 +40,7 @@
                 <div class="card-body p-0">
                     <?php foreach($data['items'] as $item): ?>
                         <div class="d-flex align-items-center border-bottom p-3">
+                            
                             <?php if(!empty($item->image)): ?>
                                 <img src="<?php echo URLROOT; ?>/assets/products/<?php echo $item->image; ?>" 
                                      alt="<?php echo $item->name; ?>" 
@@ -25,7 +48,7 @@
                                      width="70" height="70" style="object-fit:cover;">
                             <?php else: ?>
                                 <div class="bg-light rounded me-3 d-flex align-items-center justify-content-center" style="width:70px; height:70px;">
-                                    <small>No Img</small>
+                                    <small class="text-muted">No Img</small>
                                 </div>
                             <?php endif; ?>
                             
@@ -65,7 +88,15 @@
 
                     <p class="mb-1 fw-bold text-success">Order Status</p>
                     <p class="mb-3">
-                        <span class="badge bg-secondary"><?php echo ucfirst(str_replace('_', ' ', $data['order']->order_status)); ?></span>
+                        <?php 
+                            $statusClass = 'secondary';
+                            if ($data['order']->order_status == 'delivered') $statusClass = 'success';
+                            if ($data['order']->order_status == 'cancelled') $statusClass = 'danger';
+                            if ($data['order']->order_status == 'processing' || $data['order']->order_status == 'out_for_delivery') $statusClass = 'primary';
+                        ?>
+                        <span class="badge bg-<?php echo $statusClass; ?>">
+                            <?php echo ucfirst(str_replace('_', ' ', $data['order']->order_status)); ?>
+                        </span>
                     </p>
 
                     <hr>

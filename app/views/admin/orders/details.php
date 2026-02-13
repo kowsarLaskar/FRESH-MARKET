@@ -86,14 +86,35 @@
 <div class="content-wrapper">
 
     <div class="d-flex justify-content-between align-items-center mb-3 flex-shrink-0">
-        <div>
-            <h3 class="fw-bold mb-0">Order #<?php echo $data['order']->order_id; ?></h3>
-            <small class="text-muted">Placed on <?php echo date('M d, Y h:i A', strtotime($data['order']->order_date)); ?></small>
-        </div>
-        <a href="<?php echo URLROOT; ?>/adminOrders" class="btn btn-outline-secondary btn-sm">
-            <i class="fas fa-arrow-left me-2"></i>Back to List
+    <div>
+        <h3 class="fw-bold mb-0">Order #<?php echo $data['order']->order_id; ?></h3>
+        <small class="text-muted">Placed on <?php echo date('M d, Y h:i A', strtotime($data['order']->order_date)); ?></small>
+    </div>
+    <div>
+        <?php if($data['order']->order_status == 'delivered'): ?>
+            <a href="<?php echo URLROOT; ?>/adminOrders/invoice/<?php echo $data['order']->order_id; ?>" target="_blank" class="btn btn-dark btn-sm me-2 shadow-sm">
+                <i class="fas fa-print me-2"></i>Print Invoice
+            </a>
+        <?php endif; ?>
+        
+        <a href="<?php echo URLROOT; ?>/adminOrders" class="btn btn-outline-secondary btn-sm shadow-sm">
+            <i class="fas fa-arrow-left me-2"></i>Back
         </a>
     </div>
+</div>
+
+    <?php if($data['order']->order_status == 'cancelled'): ?>
+        <div class="alert alert-danger shadow-sm border-danger border-2 d-flex align-items-center mb-3 flex-shrink-0">
+            <i class="fas fa-exclamation-triangle fa-2x me-3"></i>
+            <div>
+                <h6 class="fw-bold mb-1 text-danger">ORDER CANCELLED</h6>
+                <p class="mb-0 small text-dark">
+                    <strong>Reason:</strong> 
+                    <?php echo !empty($data['order']->cancellation_reason) ? $data['order']->cancellation_reason : 'No reason provided by staff.'; ?>
+                </p>
+            </div>
+        </div>
+    <?php endif; ?>
 
     <div class="container-fluid main-grid-wrapper">
         <div class="row h-100-container">
@@ -184,6 +205,15 @@
                                 <small class="text-muted"><?php echo $data['assigned_boy']->phone; ?></small>
                             <?php endif; ?>
                         </div>
+                        
+                    <?php elseif($data['order']->order_status == 'cancelled' && !empty($data['assigned_boy'])): ?>
+                        <div class="alert alert-danger py-2 d-flex align-items-center mb-2">
+                            <i class="fas fa-times-circle fs-4 me-3"></i>
+                            <div style="line-height: 1.2;">
+                                <small class="text-uppercase text-muted" style="font-size: 0.7rem;">Cancelled By</small><br>
+                                <strong><?php echo $data['assigned_boy']->full_name; ?></strong>
+                            </div>
+                        </div>
 
                     <?php else: ?>
 
@@ -201,30 +231,32 @@
                             </div>
                         <?php endif; ?>
 
-                        <form action="<?php echo URLROOT; ?>/adminOrders/show/<?php echo $data['order']->order_id; ?>" method="post">
-                            <label class="form-label small text-muted">Assign / Change Staff:</label>
-                            <div class="input-group input-group-sm">
-                                <select name="delivery_boy_id" class="form-select" required>
-                                    
-                                    <option value="broadcast" class="fw-bold text-success" <?php echo empty($data['assigned_boy']) ? 'selected' : ''; ?>>
-                                        &#128226; Broadcast to All (Open Pool)
-                                    </option>
-                                    
-                                    <option disabled>----------------</option>
-                                    
-                                    <?php if(isset($data['delivery_boys'])): ?>
-                                        <?php foreach($data['delivery_boys'] as $boy): ?>
-                                            <option value="<?php echo $boy->user_id; ?>" 
-                                                <?php echo (isset($data['assigned_boy']->full_name) && $data['assigned_boy']->full_name == $boy->full_name) ? 'selected' : ''; ?>>
-                                                <?php echo $boy->full_name; ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    <?php endif; ?>
-                                    
-                                </select>
-                                <button type="submit" class="btn btn-primary">Assign</button>
-                            </div>
-                        </form>
+                        <?php if($data['order']->order_status != 'cancelled'): ?>
+                            <form action="<?php echo URLROOT; ?>/adminOrders/show/<?php echo $data['order']->order_id; ?>" method="post">
+                                <label class="form-label small text-muted">Assign / Change Staff:</label>
+                                <div class="input-group input-group-sm">
+                                    <select name="delivery_boy_id" class="form-select" required>
+                                        
+                                        <option value="broadcast" class="fw-bold text-success" <?php echo empty($data['assigned_boy']) ? 'selected' : ''; ?>>
+                                            &#128226; Broadcast to All (Open Pool)
+                                        </option>
+                                        
+                                        <option disabled>----------------</option>
+                                        
+                                        <?php if(isset($data['delivery_boys'])): ?>
+                                            <?php foreach($data['delivery_boys'] as $boy): ?>
+                                                <option value="<?php echo $boy->user_id; ?>" 
+                                                    <?php echo (isset($data['assigned_boy']->full_name) && $data['assigned_boy']->full_name == $boy->full_name) ? 'selected' : ''; ?>>
+                                                    <?php echo $boy->full_name; ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                        
+                                    </select>
+                                    <button type="submit" class="btn btn-primary">Assign</button>
+                                </div>
+                            </form>
+                        <?php endif; ?>
 
                     <?php endif; ?> 
                 </div>
