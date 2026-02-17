@@ -1,25 +1,43 @@
 <?php
-class Shop extends Controller {
+class Shop extends Controller
+{
     private $productModel;
 
-    public function __construct() {
-        // 1. Load the Product Model so we can use database functions
+    public function __construct()
+    {
         $this->productModel = $this->model('Product');
     }
 
-    public function index() {
-        // 2. Fetch Real Data from the Database
+    // 1. Show All Products (Default)
+    public function index()
+    {
         $categories = $this->productModel->getCategories();
-        $products = $this->productModel->getShopProducts();
+        $products = $this->productModel->getShopProducts(); // Assumes getting all active products
 
-        // 3. Prepare the Data Array
         $data = [
             'title' => 'Shop All',
-            'categories' => $categories, // Real categories for Sidebar
-            'products' => $products      // Real products for Grid
+            'categories' => $categories,
+            'products' => $products,
+            'current_category' => null // No specific category selected
         ];
 
-        // 4. Load the View
+        $this->view('shop/index', $data);
+    }
+
+    // 2. Show Products by Category
+    public function category($id)
+    {
+        $categories = $this->productModel->getCategories(); // Still need list for sidebar
+        $products = $this->productModel->getProductsByCategory($id); // Filtered products
+        $currentCategory = $this->productModel->getCategoryById($id); // Get banner/name info
+
+        $data = [
+            'title' => $currentCategory->name,
+            'categories' => $categories,
+            'products' => $products,
+            'current_category' => $currentCategory // Pass specific category data
+        ];
+
         $this->view('shop/index', $data);
     }
 }

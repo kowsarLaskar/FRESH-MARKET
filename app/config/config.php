@@ -19,4 +19,5 @@ define('SITENAME', 'Fresh Market');
 define('CURRENCY', '₹');
 
 // Delivery Settings
-define('DRIVER_COMMISSION', 40.00); // Amount paid to driver per delivered order
+define('DRIVER_COMMISSION', 40.00); 
+?>

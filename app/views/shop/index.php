@@ -1,242 +1,442 @@
 <?php require_once '../app/views/includes/header.php'; ?>
 
 <style>
-    /* --- SHOP PAGE STYLING --- */
-    body { background-color: #FBF9F1; }
+body {
+  background-color: #FBF9F1;
+}
 
-    /* Sidebar Styles */
-    .sidebar-title {
-        font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 1.1rem;
-        color: #1F4D3C; border-bottom: 1px solid #000; padding-bottom: 10px; margin-bottom: 20px;
-    }
-    .cat-link {
-        display: block; color: #333; font-weight: 300; text-decoration: none;
-        padding: 8px 0; font-size: 0.95rem; transition: color 0.2s;
-    }
-    .cat-link:hover { color: #5ba534; }
-    .cat-link.active { font-weight: 600; color: #1F4D3C; }
+/* --- STICKY SIDEBAR --- */
+.sticky-sidebar {
+  position: -webkit-sticky;
+  /* For Safari */
+  position: sticky;
+  top: 100px;
+  /* Adjust based on your navbar height */
+  height: fit-content;
+  z-index: 100;
+  padding-right: 20px;
+}
 
-    /* Price Filter Slider */
-    .price-slider {
-        -webkit-appearance: none; width: 100%; background: transparent; margin-top: 10px;
-    }
-    .price-slider::-webkit-slider-runnable-track {
-        width: 100%; height: 4px; background: #000000; border-radius: 2px; cursor: pointer;
-    }
-    .price-slider::-webkit-slider-thumb {
-        -webkit-appearance: none; height: 18px; width: 18px; border-radius: 50%;
-        background: #5ba534; cursor: pointer; margin-top: -7px;
-    }
-    .price-slider::-moz-range-track {
-        width: 100%; height: 4px; background: #000000; border-radius: 2px; cursor: pointer;
-    }
-    .price-slider::-moz-range-thumb {
-        height: 18px; width: 18px; border: none; border-radius: 50%; background: #5ba534; cursor: pointer;
-    }
+.sidebar-title {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #1F4D3C;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
 
-    /* Main Content Styles */
-    .shop-banner-container {
-        width: 100%; height: 300px; background-color: #e0e0e0; margin-bottom: 30px; overflow: hidden;
-    }
-    .shop-banner-img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
-    .category-header h1 { font-weight: 700; color: #1F4D3C; }
+.cat-link {
+  display: block;
+  color: #555;
+  font-weight: 400;
+  text-decoration: none;
+  padding: 8px 10px;
+  font-size: 0.95rem;
+  transition: all 0.2s;
+  border-radius: 5px;
+}
 
-    /* Product Card Styles */
-    .shop-card { background: transparent; border: none; text-align: center; margin-bottom: 40px; }
-    .shop-img-wrapper {
-        height: 200px; width: 100%; display: flex; align-items: center; justify-content: center;
-        overflow: hidden; margin-bottom: 15px; background-color: white; transition: opacity 0.3s;
-    }
-    .shop-img-wrapper:hover { opacity: 0.8; }
-    .shop-img { max-height: 100%; max-width: 100%; object-fit: contain; }
-    .shop-title { font-size: 1rem; color: #555; font-weight: 300; margin-bottom: 5px; }
-    .shop-price { font-size: 1rem; color: #555; font-weight: 300; margin-bottom: 15px; }
+.cat-link:hover {
+  background-color: #e8f5e9;
+  color: #1F4D3C;
+}
 
-    /* Qty Group */
-    .shop-qty-group {
-        display: flex; justify-content: center; align-items: center; border: 1px solid #999;
-        width: 120px; margin: 0 auto 15px auto; height: 35px;
-    }
-    .shop-qty-btn { background: transparent; border: none; color: #333; font-size: 1.2rem; width: 30px; cursor: pointer; }
-    .shop-qty-val { border: none; background: transparent; text-align: center; width: 40px; font-size: 0.9rem; -moz-appearance: textfield; }
+.cat-link.active {
+  background-color: #1F4D3C;
+  color: white;
+  font-weight: 600;
+}
 
-    /* Add to Cart Button */
-    .btn-shop-add {
-        width: 100%; border: 1px solid #333; background-color: transparent; color: #333;
-        padding: 8px 0; font-size: 0.9rem; transition: all 0.3s;
-    }
-    .btn-shop-add:hover { background-color: #333; color: white; }
+/* --- BANNER STYLES --- */
+.shop-banner-container {
+  width: 100%;
+  height: 300px;
+  background-color: #e0e0e0;
+  margin-bottom: 30px;
+  overflow: hidden;
+  border-radius: 12px;
+  position: relative;
+}
 
-    /* Breadcrumb */
-    .breadcrumb a { color: #333; text-decoration: none; font-size: 0.9rem; }
-    .breadcrumb span { font-size: 0.9rem; color: #777; }
+.shop-banner-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.shop-banner-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+  padding: 20px;
+  color: white;
+}
+
+/* --- PRODUCT CARD (AMUL STYLE) --- */
+.product-card-clean {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 10px;
+  text-align: left;
+  position: relative;
+  height: 100%;
+  transition: box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.product-card-clean:hover {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  border-color: transparent;
+}
+
+.pc-img-wrap {
+  height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.pc-img-wrap img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  transition: transform 0.3s;
+}
+
+.product-card-clean:hover .pc-img-wrap img {
+  transform: scale(1.05);
+}
+
+.pc-time-badge {
+  background: #F1F4F6;
+  color: #333;
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  margin-bottom: 8px;
+}
+
+.pc-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1c1c1c;
+  margin-bottom: 4px;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  height: 2.6em;
+}
+
+.pc-unit {
+  color: #888;
+  font-size: 0.8rem;
+  margin-bottom: 10px;
+}
+
+.pc-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+}
+
+.pc-price-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.pc-price {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1c1c1c;
+}
+
+.pc-old-price {
+  font-size: 0.75rem;
+  text-decoration: line-through;
+  color: #999;
+}
+
+.btn-add-outline {
+  background-color: #fff;
+  color: #2A6049;
+  border: 1px solid #2A6049;
+  padding: 5px 18px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-add-outline:hover {
+  background-color: #2A6049;
+  color: #fff;
+}
+
+.btn-go-cart {
+  background-color: #2A6049 !important;
+  color: #fff !important;
+  border: 1px solid #2A6049 !important;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.75rem;
+  width: 100%;
+  white-space: nowrap;
+}
+
+/* Price Slider */
+.price-slider {
+  -webkit-appearance: none;
+  width: 100%;
+  background: transparent;
+}
+
+.price-slider::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 4px;
+  background: #ccc;
+  border-radius: 2px;
+}
+
+.price-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: #1F4D3C;
+  margin-top: -6px;
+  cursor: pointer;
+}
 </style>
 
-<div class="container py-5">
-    
-    <div class="mb-4 breadcrumb">
-        <a href="<?php echo URLROOT; ?>">Home</a>
-        <span class="mx-2">&gt;</span>
-        <span>All Products</span>
-    </div>
+<div class="container py-2">
 
-    <div class="row">
-        
-        <div class="col-md-3 pe-lg-5">
-            
-            <div class="mb-5">
-                <h3 class="sidebar-title">Browse by</h3>
-                <nav>
-                    <a href="<?php echo URLROOT; ?>/shop" class="cat-link active">All Products</a>
-                    
-                    <?php if(!empty($data['categories'])): ?>
-                        <?php foreach($data['categories'] as $cat): ?>
-                            <a href="<?php echo URLROOT; ?>/shop/category/<?php echo $cat->category_id; ?>" class="cat-link">
-                                <?php echo $cat->name; ?>
-                            </a>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </nav>
-            </div>
+  <div class="mb-2 breadcrumb small text-muted">
+    <a href="<?php echo URLROOT; ?>" class="text-decoration-none text-muted">Home</a>
+    <span class="mx-2">&gt;</span>
+    <span class="fw-bold text-dark">Shop</span>
+  </div>
 
-            <div class="mb-5">
-                <h3 class="sidebar-title">Filter by</h3>
-                <label class="mb-2 fw-light">Price</label>
-                <input type="range" class="form-range price-slider" min="0" max="50" id="priceRange">
-                <div class="d-flex justify-content-between mt-2 fs-6 text-muted">
-                    <span>$0</span>
-                    <span>$50</span>
-                </div>
-            </div>
+  <div class="row">
 
+    <div class="col-lg-3 d-none d-lg-block">
+      <div class="sticky-sidebar">
+        <div class="mb-5">
+          <h3 class="sidebar-title">Categories</h3>
+          <nav>
+            <a href="<?php echo URLROOT; ?>/shop"
+              class="cat-link <?php echo (!isset($data['current_category'])) ? 'active' : ''; ?>">
+              All Products
+            </a>
+
+            <?php if (!empty($data['categories'])): ?>
+            <?php foreach ($data['categories'] as $cat): ?>
+            <a href="<?php echo URLROOT; ?>/shop/category/<?php echo $cat->category_id; ?>"
+              class="cat-link <?php echo (isset($data['current_category']) && $data['current_category']->category_id == $cat->category_id) ? 'active' : ''; ?>">
+              <?php echo $cat->name; ?>
+            </a>
+            <?php endforeach; ?>
+            <?php endif; ?>
+          </nav>
         </div>
 
-        <div class="col-md-9">
-            
-            <div class="shop-banner-container">
-                <img src="<?php echo URLROOT; ?>/assets/products/shop_banner.jpg" alt="Shop Banner" class="shop-banner-img">
+        <div class="mb-5">
+          <h3 class="sidebar-title">Filter by Price</h3>
+          <input type="range" class="form-range price-slider" min="0" max="1000" id="priceRange">
+          <div class="d-flex justify-content-between mt-2 small fw-bold text-muted">
+            <span>₹0</span>
+            <span>₹1000+</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-9">
+
+      <div class="shop-banner-container">
+        <?php
+                // 1. Define your Default Local Image
+                // This is used for "All Products" OR if a category has no image.
+                $defaultBanner = URLROOT . '/assets/products/shop_banner.jpg';
+
+                // 2. Check if we are on a specific Category Page
+                if (isset($data['current_category'])) {
+
+                    // We are on a specific Category Page -> Use Category Name & Desc
+                    $bannerTitle = $data['current_category']->name;
+                    $bannerDesc = $data['current_category']->description;
+
+                    // Check if THIS category has a custom image uploaded
+                    if (!empty($data['current_category']->image)) {
+                        $bannerImg = URLROOT . '/assets/products/' . $data['current_category']->image;
+                    } else {
+                        // Category exists, but has NO image -> Use Default
+                        $bannerImg = $defaultBanner;
+                    }
+                } else {
+                    // We are on the "All Products" (Shop Home) Page
+                    $bannerTitle = "All Products";
+                    $bannerDesc = "Explore our wide selection of fresh produce and essentials.";
+                    $bannerImg = $defaultBanner;
+                }
+                ?>
+
+        <img src="<?php echo $bannerImg; ?>" alt="Category Banner" class="shop-banner-img">
+
+        <div class="shop-banner-overlay">
+          <h1 class="fw-bold mb-1"><?php echo $bannerTitle; ?></h1>
+          <p class="mb-0 opacity-75"><?php echo $bannerDesc; ?></p>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+        <span class="text-muted small fw-bold"><?php echo count($data['products']); ?> Items found</span>
+        <div class="dropdown">
+          <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+            Sort by: Relevance
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="#">Price: Low to High</a></li>
+            <li><a class="dropdown-item" href="#">Price: High to Low</a></li>
+            <li><a class="dropdown-item" href="#">Newest First</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-3">
+
+        <?php if (!empty($data['products'])): ?>
+        <?php foreach ($data['products'] as $product): ?>
+        <div class="col">
+          <div class="product-card-clean h-100">
+            <a href="<?php echo URLROOT; ?>/shop/product/<?php echo $product->product_id; ?>" class="pc-img-wrap">
+              <img src="<?php echo URLROOT; ?>/assets/products/<?php echo $product->image; ?>"
+                alt="<?php echo $product->name; ?>">
+            </a>
+
+            <div class="pc-time-badge"><i class="fas fa-clock me-1"></i> 20 MINS</div>
+
+            <div class="pc-title" title="<?php echo $product->name; ?>"><?php echo $product->name; ?></div>
+
+            <div class="pc-unit">
+              <?php echo isset($product->unit_value) ? $product->unit_value . ' ' . $product->unit_type : '1 Unit'; ?>
             </div>
 
-            <div class="category-header mb-4">
-                <h1>All Products</h1>
-                <p class="text-muted fw-light mt-2" style="max-width: 700px;">
-                    Explore our wide selection of fresh produce, dairy, and household essentials.
-                </p>
-            </div>
-
-            <div class="d-flex justify-content-between align-items-center mb-4 pb-3">
-                <span class="text-muted fw-light"><?php echo count($data['products']); ?> products</span>
-                <div class="dropdown">
-                    <button class="btn btn-sm dropdown-toggle fw-light border-0" type="button" data-bs-toggle="dropdown">
-                        Sort by: Recommended
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="#">Newest</a></li>
-                        <li><a class="dropdown-item" href="#">Price (Low to High)</a></li>
-                        <li><a class="dropdown-item" href="#">Price (High to Low)</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="row g-4">
-                
-                <?php if(!empty($data['products'])): ?>
-                    <?php foreach($data['products'] as $product): ?>
-                    <div class="col-6 col-md-4 col-lg-3">
-                        <div class="shop-card">
-                            
-                            <form action="<?php echo URLROOT; ?>/cart/add" method="POST" class="add-cart-form">
-                                <input type="hidden" name="product_id" value="<?php echo $product->product_id; ?>">
-
-                                <a href="<?php echo URLROOT; ?>/shop/product/<?php echo $product->product_id; ?>" class="shop-img-wrapper">
-                                    <img src="<?php echo URLROOT; ?>/assets/products/<?php echo $product->image; ?>" alt="<?php echo $product->name; ?>" class="shop-img">
-                                </a>
-
-                                <div class="shop-title"><?php echo $product->name; ?></div>
-                                <div class="shop-price"><?php echo CURRENCY . $product->selling_price; ?></div>
-
-                                <div class="shop-qty-group">
-                                    <button type="button" class="shop-qty-btn" onclick="this.nextElementSibling.value = Math.max(1, parseInt(this.nextElementSibling.value) - 1)">-</button>
-                                    <input type="number" name="qty" class="shop-qty-val" value="1" min="1" readonly>
-                                    <button type="button" class="shop-qty-btn" onclick="this.previousElementSibling.value = parseInt(this.previousElementSibling.value) + 1">+</button>
-                                </div>
-
-                                <button type="submit" class="btn-shop-add">Add to Cart</button>
-                            </form>
-                            </div>
-                    </div>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <p class="text-center mt-5">No products found in the database.</p>
+            <div class="pc-footer">
+              <div class="pc-price-box">
+                <span class="pc-price"><?php echo CURRENCY . $product->selling_price; ?></span>
+                <?php if ($product->mrp > $product->selling_price): ?>
+                <span class="pc-old-price"><?php echo CURRENCY . $product->mrp; ?></span>
                 <?php endif; ?>
+              </div>
 
+              <form action="<?php echo URLROOT; ?>/cart/add" method="POST" class="add-cart-form-clean">
+                <input type="hidden" name="product_id" value="<?php echo $product->product_id; ?>">
+                <input type="hidden" name="qty" value="1">
+                <button type="submit" class="btn-add-outline">ADD</button>
+              </form>
             </div>
-
-            <div class="d-flex justify-content-center mt-5">
-                <nav>
-                    <ul class="pagination pagination-sm">
-                        <li class="page-item disabled"><a class="page-link border-0 bg-transparent text-muted" href="#">&lt;</a></li>
-                        <li class="page-item"><a class="page-link border-0 bg-transparent text-dark" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link border-0 bg-transparent text-muted" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link border-0 bg-transparent text-muted" href="#">&gt;</a></li>
-                    </ul>
-                </nav>
-            </div>
-
+          </div>
         </div>
+        <?php endforeach; ?>
+        <?php else: ?>
+        <div class="col-12 text-center py-5">
+          <h4 class="text-muted">No products found in this category.</h4>
+          <a href="<?php echo URLROOT; ?>/shop" class="btn btn-primary mt-3">View All Products</a>
+        </div>
+        <?php endif; ?>
+
+      </div>
+
+      <div class="d-flex justify-content-center mt-5">
+        <nav>
+          <ul class="pagination pagination-sm">
+            <li class="page-item disabled"><a class="page-link border-0" href="#">&lt;</a></li>
+            <li class="page-item active"><a class="page-link border-0 bg-success" href="#">1</a></li>
+            <li class="page-item"><a class="page-link border-0 text-dark" href="#">2</a></li>
+            <li class="page-item"><a class="page-link border-0 text-dark" href="#">&gt;</a></li>
+          </ul>
+        </nav>
+      </div>
+
     </div>
+  </div>
 </div>
-</div> <!-- End of Main Container -->
+
 <script>
-    // Wait for the HTML to be fully loaded
-    document.addEventListener('DOMContentLoaded', function() {
-        
-        const forms = document.querySelectorAll('.add-cart-form');
+// AJAX Add to Cart Logic
+document.addEventListener('DOMContentLoaded', function() {
+  const forms = document.querySelectorAll('.add-cart-form-clean');
 
-        forms.forEach(form => {
-            form.addEventListener('submit', function(e) {
-                e.preventDefault(); 
+  forms.forEach(form => {
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
 
-                const button = form.querySelector('button[type="submit"]');
-                const originalText = button.innerText;
+      const button = form.querySelector('button[type="submit"]');
 
-                // 1. Add this header so PHP knows it's an AJAX request
-                const headers = {
-                    'X-Requested-With': 'XMLHttpRequest'
-                };
+      // Loading State
+      button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+      button.disabled = true;
+      button.style.borderColor = "#ccc";
+      button.style.color = "#ccc";
 
-                const formData = new FormData(this);
+      const headers = {
+        'X-Requested-With': 'XMLHttpRequest'
+      };
+      const formData = new FormData(this);
 
-                fetch(this.action, {
-                    method: 'POST',
-                    headers: headers, 
-                    body: formData
-                })
-                .then(response => response.json()) 
-                .then(data => {
-                    // 2. Update BOTH Cart Icons (Mobile & Desktop)
-                    const desktopBadge = document.getElementById('cart-count');
-                    const mobileBadge = document.getElementById('mobile-cart-count');
+      fetch(this.action, {
+          method: 'POST',
+          headers: headers,
+          body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+          // Update Header Cart Counts
+          const desktopBadge = document.getElementById('cart-count');
+          const mobileBadge = document.getElementById('mobile-cart-count');
+          if (desktopBadge) desktopBadge.innerText = data.new_count;
+          if (mobileBadge) mobileBadge.innerText = data.new_count;
 
-                    if (desktopBadge) desktopBadge.innerText = data.new_count;
-                    if (mobileBadge) mobileBadge.innerText = data.new_count;
-
-                    // 3. Visual Feedback
-                    button.innerText = "Added!";
-                    button.style.backgroundColor = "#1F4D3C"; 
-                    button.style.color = "#fff";
-                    
-                    setTimeout(() => {
-                        button.innerText = originalText;
-                        button.style.backgroundColor = ""; 
-                        button.style.color = "";
-                    }, 2000);
-                })
-                .catch(error => console.error('Error:', error));
-            });
+          // Change Button to "GO TO CART"
+          const cartLink = document.createElement('a');
+          cartLink.href = "<?php echo URLROOT; ?>/cart";
+          cartLink.className = "btn-go-cart";
+          cartLink.innerHTML = "GO TO CART";
+          button.replaceWith(cartLink);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          button.innerHTML = "ADD";
+          button.disabled = false;
+          button.style.borderColor = "";
+          button.style.color = "";
         });
-
     });
+  });
+});
 </script>
-<?php require_once '../app/views/includes/footer.php'; ?>
 
+<?php require_once '../app/views/includes/footer.php'; ?>

@@ -1,28 +1,32 @@
 <?php
-class Pages extends Controller {
+class Pages extends Controller
+{
     private $productModel;
 
-    public function __construct() {
+    public function __construct()
+    {
         // Load the Product Model to get access to database methods
         $this->productModel = $this->model('Product');
     }
 
-    public function index() {
-    // 1. Get Weekly Deals
-    $deals = $this->productModel->getWeeklyDeals();
-    
-    // 2. NEW: Get Grab 'N Go Products
-    $grabNGo = $this->productModel->getGrabNGo();
+    public function index()
+    {
+        // Fetch specific categories by their ID
+        $deals = $this->productModel->getProductsByCategory(7);       // Weekly Deals
+        $grabNGo = $this->productModel->getProductsByCategory(4);     // Grab 'N Go
+        $breadGrains = $this->productModel->getProductsByCategory(2); // Bread & Grains
+        $dairyEggs = $this->productModel->getProductsByCategory(3);   // Dairy & Eggs
+        $household = $this->productModel->getProductsByCategory(5);   // Household Goods
 
-    // 3. Pass both to the view
-    $data = [
-        'title' => 'Welcome',
-        'deals' => $deals,
-        'grab_n_go' => $grabNGo // <--- Added this
-    ];
+        $data = [
+            'title' => 'Fresh Market',
+            'deals' => $deals,
+            'grab_n_go' => $grabNGo,
+            'bread_grains' => $breadGrains,
+            'dairy_eggs' => $dairyEggs,
+            'household' => $household
+        ];
 
-    $this->view('pages/index', $data);
-}
-
-
+        $this->view('pages/index', $data);
+    }
 }

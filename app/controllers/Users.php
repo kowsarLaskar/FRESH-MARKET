@@ -177,7 +177,7 @@ class Users extends Controller {
 
         // Redirect based on Role
         if ($user->role == 'admin') {
-            redirect('adminOrders'); 
+            redirect('admin'); 
         } 
         elseif ($user->role == 'delivery_boy') {
             redirect('delivery'); 

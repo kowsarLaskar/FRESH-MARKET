@@ -1,348 +1,523 @@
-<?php
-require_once '../app/config/config.php';
-require_once '../app/views/includes/header.php';
-?>
+<?php require_once '../app/config/config.php'; ?>
+<?php require_once '../app/views/includes/header.php'; ?>
 
 <style>
-    /* Hero Styles */
-    .hero-caption {
-        position: absolute; top: 50%; left: 6%; transform: translateY(-50%);
-        max-width: 550px; z-index: 2; text-align: left;
-    }
-    .hero-subtitle {
-        color: #2A6049; font-weight: 700; font-size: 0.9rem; text-transform: uppercase;
-        letter-spacing: 2px; margin-bottom: 10px; display: block;
-        background: rgba(255, 255, 255, 0.8); display: inline-block; padding: 2px 8px; border-radius: 4px;
-    }
-    .hero-title {
-        font-size: 3rem; font-weight: 400; color: #1F4D3C; line-height: 1.1;
-        margin-bottom: 25px; text-shadow: 2px 2px 0px #ffffff;
-    }
-    .btn-hero {
-        background-color: #5ba534; color: white; padding: 12px 35px;
-        font-weight: 600; text-transform: uppercase; letter-spacing: 1px;
-        border: none; text-decoration: none; transition: background 0.3s;
-    }
-    .btn-hero:hover { background-color: #4a8a2a; color: white; }
-    .hero-img { width: 100%; height: 500px; object-fit: cover; object-position: center; }
-    @media (max-width: 768px) {
-        .hero-title { font-size: 2rem; }
-        .hero-img { height: 350px; }
-    }
+/* --- GENERAL STYLES --- */
+body {
+  background-color: #FBF9F1;
+}
+
+/* --- BANNER & CATEGORY STYLES --- */
+.banner-container {
+  width: 100%;
+  margin-bottom: 30px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  mix-blend-mode: multiply;
+}
+
+.banner-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+.category-card {
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  background: #fff;
+  height: 100%;
+}
+
+.category-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.category-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+/* --- PRODUCT CARD STYLES (Amul Design) --- */
+.product-card-clean {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 10px;
+  text-align: left;
+  position: relative;
+  height: 100%;
+  transition: box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.product-card-clean:hover {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  border-color: transparent;
+}
+
+.pc-img-wrap {
+  height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.pc-img-wrap img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  transition: transform 0.3s;
+}
+
+.product-card-clean:hover .pc-img-wrap img {
+  transform: scale(1.05);
+}
+
+.pc-time-badge {
+  background: #F1F4F6;
+  color: #333;
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  margin-bottom: 8px;
+}
+
+.pc-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1c1c1c;
+  margin-bottom: 4px;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  height: 2.6em;
+}
+
+.pc-unit {
+  color: #888;
+  font-size: 0.8rem;
+  margin-bottom: 10px;
+}
+
+.pc-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+}
+
+.pc-price-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.pc-price {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1c1c1c;
+}
+
+.pc-old-price {
+  font-size: 0.75rem;
+  text-decoration: line-through;
+  color: #999;
+}
+
+.btn-add-outline {
+  background-color: #fff;
+  color: #2A6049;
+  border: 1px solid #2A6049;
+  padding: 5px 18px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-add-outline:hover {
+  background-color: #2A6049;
+  color: #fff;
+}
+
+.btn-go-cart {
+  background-color: #2A6049 !important;
+  color: #fff !important;
+  border: 1px solid #2A6049 !important;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.75rem;
+  width: 100%;
+  white-space: nowrap;
+}
+
+/* --- HORIZONTAL SCROLL STYLES --- */
+.scrolling-wrapper {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 20px;
+  scrollbar-width: none;
+}
+
+.scrolling-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+.scrolling-card {
+  flex: 0 0 auto;
+  width: 220px;
+  margin-right: 15px;
+}
+
+/* --- FEATURE CARD STYLES --- */
+.feature-card {
+  border-radius: 16px;
+  padding: 40px 30px;
+  text-align: center;
+  height: 100%;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid transparent;
+}
+
+.feature-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+}
+
+.card-pickup {
+  background-color: #F5EBE0;
+  color: #5D4037;
+}
+
+.card-pickup .icon-circle {
+  background-color: #D7CCC8;
+  color: #5D4037;
+}
+
+.card-delivery {
+  background-color: #D3E0EA;
+  color: #00695C;
+}
+
+.card-delivery .icon-circle {
+  background-color: #B4C6D4;
+  color: #2C3E50;
+}
+
+.card-delivery .feature-title,
+.card-delivery p {
+  color: #2C3E50;
+}
+
+.card-safety {
+  background-color: #E6EAD6;
+  color: #33691E;
+}
+
+.card-safety .icon-circle {
+  background-color: #C9D6B8;
+  color: #3E4E38;
+}
+
+.card-safety .feature-title,
+.card-safety p {
+  color: #3E4E38;
+}
+
+.icon-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 25px auto;
+  font-size: 2rem;
+  transition: transform 0.3s ease;
+}
+
+.feature-card:hover .icon-circle {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.feature-title {
+  font-weight: 700;
+  font-size: 1.25rem;
+  margin-bottom: 12px;
+}
+
+.feature-text {
+  font-weight: 500;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  opacity: 0.85;
+  margin-bottom: 0;
+}
 </style>
 
-<div class="container my-5"> <div id="heroCarousel" class="carousel slide overflow-hidden shadow" data-bs-ride="carousel" data-bs-interval="5000">
-        <div class="carousel-indicators">
-            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></button>
-            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
-            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
-            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="3"></button>
-        </div>
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <img src="<?php echo URLROOT; ?>/assets/hero_images/hero_img_01.jpg" class="d-block hero-img" alt="Healthy Lunch">
-                <div class="hero-caption">
-                    <span class="hero-subtitle">FRESH MARKET</span>
-                    <h1 class="hero-title">WE'LL DELIVER<br>EVERYTHING<br>YOU NEED</h1>
-                    <a href="<?php echo URLROOT; ?>/shop" class="btn-hero">SHOP ONLINE</a>
-                </div>
-            </div>
-            <div class="carousel-item">
-                <img src="<?php echo URLROOT; ?>/assets/hero_images/hero_image_02.jpg" class="d-block hero-img" alt="Daily Groceries">
-            </div>
-            <div class="carousel-item">
-                <img src="<?php echo URLROOT; ?>/assets/hero_images/hero_img_03.jpg" class="d-block hero-img" alt="Fresh Fruits">
-            </div>
-            <div class="carousel-item">
-                <img src="<?php echo URLROOT; ?>/assets/hero_images/hero_img_04.jpg" class="d-block hero-img" alt="Always Fresh">
-            </div>
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
+<div class="container my-5">
+  <div class="banner-container">
+    <a href="<?php echo URLROOT; ?>/shop">
+      <img
+        src="https://cdn.grofers.com/cdn-cgi/image/f=auto,fit=scale-down,q=70,metadata=none,w=2700/layout-engine/2026-01/Frame-1437256605-2-2.jpg"
+        alt="Fresh Market Banner" class="banner-img">
+    </a>
+  </div>
+
+  <div class="row g-4 mb-5">
+    <div class="col-md-4">
+      <div class="category-card">
+        <a href="<?php echo URLROOT; ?>/shop/category/10"><img
+            src="https://cdn.grofers.com/cdn-cgi/image/f=auto,fit=scale-down,q=70,metadata=none,w=720/layout-engine/2023-07/pharmacy-WEB.jpg"
+            alt="Pharmacy" class="category-img"></a>
+      </div>
     </div>
+    <div class="col-md-4">
+      <div class="category-card">
+        <a href="<?php echo URLROOT; ?>/shop/category/12"><img
+            src="https://cdn.grofers.com/cdn-cgi/image/f=auto,fit=scale-down,q=70,metadata=none,w=720/layout-engine/2026-01/pet_crystal_WEB-1.png"
+            alt="Pet Supplies" class="category-img"></a>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="category-card">
+        <a href="<?php echo URLROOT; ?>/shop/category/11"><img
+            src="https://cdn.grofers.com/cdn-cgi/image/f=auto,fit=scale-down,q=70,metadata=none,w=720/layout-engine/2026-01/baby_crystal_WEB-1.png"
+            alt="Baby Care" class="category-img"></a>
+      </div>
+    </div>
+  </div>
 </div>
 
-<style>
-    @import url('https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css');
-    @import url('https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css');
-
-    .product-card { border: none; background: #fff; padding: 10px; transition: transform 0.2s; }
-    .badge-special {
-        background-color: #2A6049; color: white; font-size: 0.8rem;
-        padding: 4px 12px; position: absolute; top: 0; left: 0; z-index: 10; border-radius: 0;
-    }
-    .product-img-wrapper {
-        height: 180px; display: flex; align-items: center; justify-content: center;
-        overflow: hidden; margin-bottom: 15px;
-    }
-    .product-img-wrapper img { max-height: 100%; max-width: 100%; object-fit: contain; }
-    .product-title { font-size: 1rem; color: #333; font-weight: 400; margin-bottom: 5px; }
-    .price-wrap { font-size: 1rem; margin-bottom: 15px; }
-    .old-price { text-decoration: line-through; color: #999; margin-right: 8px; font-size: 0.9rem; }
-    .new-price { color: #333; font-weight: 600; }
-    
-    .qty-input-group { border: 1px solid #ddd; display: flex; width: 100%; height: 35px; }
-    .qty-btn { background: white; border: none; width: 30px; font-size: 1.2rem; color: #333; cursor: pointer; }
-    .qty-btn:hover { background-color: #f8f9fa; }
-    .qty-value { border: none; text-align: center; width: 100%; font-size: 0.9rem; -moz-appearance: textfield; }
-
-    .owl-prev, .owl-next {
-        position: absolute; top: 40%; transform: translateY(-50%);
-        font-size: 3rem !important; color: #333 !important; opacity: 0.5; transition: opacity 0.3s;
-    }
-    .owl-prev:hover, .owl-next:hover { opacity: 1; }
-    .owl-prev { left: -40px; }
-    .owl-next { right: -40px; }
-
-    .btn-add-cart {
-        background-color: #2A6049;
-        color: white;
-        font-size: 0.8rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        border: none;
-        padding: 8px 0;
-        width: 100%;
-        margin-top: 10px;
-        transition: all 0.3s ease;
-    }
-    .btn-add-cart:hover {
-        background-color: #000000;
-        color: white;
-        text-decoration: underline;
-    }
-</style>
-
-<div class="container py-5">
-    <div class="text-center mb-5">
-        <h2 class="fw-bold" style="color: #2A6049;">Weekly Deals</h2>
-        <p class="text-muted">Discover our best offers of the week!. You can save up to 50% on selected items.</p>
+<div class="container py-4">
+  <div class="mb-4">
+    <h3 class="fw-bold" style="color: #1c1c1c;">Weekly Deals</h3>
+    <p class="text-muted small">Save up to 50% on selected items.</p>
+  </div>
+  <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-3">
+    <?php if (!empty($data['deals'])): ?>
+    <?php foreach ($data['deals'] as $product): ?>
+    <div class="col">
+      <?php include '../app/views/includes/product_card_template.php'; ?>
     </div>
-    
-    <div class="owl-carousel owl-theme" id="weeklyDealsSlider">
-        <?php if(!empty($data['deals'])): ?>
-            <?php foreach($data['deals'] as $product): ?>
-            <div class="item">
-                <div class="product-card position-relative text-center">
-                    <form action="<?php echo URLROOT; ?>/cart/add" method="POST" class="add-cart-form">
-                        <input type="hidden" name="product_id" value="<?php echo $product->product_id; ?>">
-                        <div class="badge-special">Special Price</div>
-                        <a href="<?php echo URLROOT; ?>/shop/product/<?php echo $product->product_id; ?>" class="product-img-wrapper">
-                            <img src="<?php echo URLROOT; ?>/assets/products/<?php echo $product->image; ?>" alt="<?php echo $product->name; ?>">
-                        </a>
-                        <h5 class="product-title"><?php echo $product->name; ?></h5>
-                        <div class="price-wrap">
-                            <span class="old-price"><?php echo CURRENCY . $product->mrp; ?></span>
-                            <span class="new-price"><?php echo CURRENCY . $product->selling_price; ?></span>
-                        </div>
-                        <div class="qty-input-group">
-                            <button class="qty-btn" type="button" onclick="decreaseQty(this)">-</button>
-                            <input type="number" name="qty" class="qty-value" value="1" min="1" readonly>
-                            <button class="qty-btn" type="button" onclick="increaseQty(this)">+</button>
-                        </div>
-                        <button type="submit" class="btn-add-cart">ADD TO CART</button>
-                    </form>
-                </div>
-            </div>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <p class="text-center">No weekly deals available at the moment.</p>
-        <?php endif; ?>
+    <?php endforeach; ?>
+    <?php else: ?>
+    <div class="col-12">
+      <p class="text-center">No deals available.</p>
     </div>
+    <?php endif; ?>
+  </div>
 </div>
 
 <div class="container">
-    <hr style="border-top: 1px solid #aaa; opacity: 0.5; margin: 40px 0;">
+  <hr style="border-top: 1px solid #e0e0e0; margin: 30px 0;">
 </div>
 
-
-<style>
-    .grab-go-img-wrapper {
-        height: 180px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-        transition: transform 0.3s ease;
-    }
-    .grab-go-img-wrapper:hover { transform: scale(1.05); }
-    .grab-go-img { max-height: 100%; max-width: 100%; object-fit: contain; }
-</style>
-
-<div class="w-100 py-5" style="background-color: #ffffff;"> 
-    <div class="container">
-        
-        <div class="text-center mb-5">
-            <h2 class="fw-bold" style="color: #2A6049;">Grab 'N Go</h2>
-            <p class="text-muted">Grab all your favorite items in one convenient place.</p>
-        </div>
-
-        <div class="row g-4 justify-content-center">
-            <?php if(!empty($data['grab_n_go'])): ?>
-                <?php foreach($data['grab_n_go'] as $product): ?>
-                <div class="col-12 col-sm-6 col-lg-3">
-                    <div class="product-card position-relative text-center ">
-                        <form action="<?php echo URLROOT; ?>/cart/add" method="POST" class="add-cart-form">
-                            <input type="hidden" name="product_id" value="<?php echo $product->product_id; ?>">
-                            <a href="<?php echo URLROOT; ?>/shop/product/<?php echo $product->product_id; ?>" class="product-img-wrapper">
-                                <img src="<?php echo URLROOT; ?>/assets/products/<?php echo $product->image; ?>" alt="<?php echo $product->name; ?>">
-                            </a>
-                            <h5 class="product-title"><?php echo $product->name; ?></h5>
-                            <div class="price-wrap">
-                                <span class="new-price"><?php echo CURRENCY . $product->selling_price; ?></span>
-                            </div>
-                            <div class="qty-input-group">
-                                <button class="qty-btn" type="button" onclick="decreaseQty(this)">-</button>
-                                <input type="number" name="qty" class="qty-value" value="1" min="1" readonly>
-                                <button class="qty-btn" type="button" onclick="increaseQty(this)">+</button>
-                            </div>
-                            <button type="submit" class="btn-add-cart">ADD TO CART</button>
-                        </form>
-                    </div>
-                </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <p class="text-center">No products available.</p>
-            <?php endif; ?>
-        </div>
+<div class="w-100 py-4" style="background-color: #FBF9F1;">
+  <div class="container">
+    <div class="mb-4">
+      <h3 class="fw-bold" style="color: #1c1c1c;">Grab 'N Go</h3>
+      <p class="text-muted small">Quick snacks and ready-to-eat items.</p>
     </div>
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-3">
+      <?php if (!empty($data['grab_n_go'])): ?>
+      <?php foreach ($data['grab_n_go'] as $product): ?>
+      <div class="col">
+        <?php include '../app/views/includes/product_card_template.php'; ?>
+      </div>
+      <?php endforeach; ?>
+      <?php else: ?>
+      <div class="col-12">
+        <p class="text-center w-100">No products available.</p>
+      </div>
+      <?php endif; ?>
+    </div>
+  </div>
 </div>
 
-<style>
-    .feature-icon {
-        font-size: 3rem;
-        color: #2A6049; /* Primary Green */
-        margin-bottom: 20px;
-    }
-    .feature-title {
-        color: #1F4D3C;
-        font-weight: 700;
-        margin-bottom: 10px;
-    }
-    .feature-text {
-        font-weight: 300;
-        font-size: 0.95rem;
-        line-height: 1.6;
-    }
-    /* Vertical Divider Logic */
-    .feature-col {
-        padding: 0 30px;
-    }
-    /* Add border to right of columns on Desktop only */
-    @media (min-width: 992px) {
-        .feature-col.border-end-lg {
-            border-right: 1px solid #ccc;
-        }
-    }
-</style>
-
-<div class="container py-5 my-5">
-    <div class="row text-center justify-content-center">
-        
-        <div class="col-lg-4 feature-col border-end-lg mb-4 mb-lg-0">
-            <div class="feature-icon">
-                <i class="fas fa-shopping-bag"></i>
-            </div>
-            <h4 class="feature-title">Pick Up Options</h4>
-            <p class="feature-text text-muted">
-                safely picking up your order from the store or curbside.
-            </p>
-        </div>
-
-        <div class="col-lg-4 feature-col border-end-lg mb-4 mb-lg-0">
-            <div class="feature-icon">
-                <i class="fas fa-truck"></i>
-            </div>
-            <h4 class="feature-title">Same Day Delivery</h4>
-            <p class="feature-text text-muted">
-               Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nam perferendis asperiores nemo, obcaecati libero aliquam fugiat debitis provident unde soluta vel labore dolorem id, sint recusandae lorem ipsum dolar sit amet consecuter adipisicing elit. Nam preferendis asperiores nemo
-            </p>
-        </div>
-
-        <div class="col-lg-4 feature-col">
-            <div class="feature-icon">
-                <i class="fas fa-head-side-mask"></i>
-            </div>
-            <h4 class="feature-title">Health & Safety Rules</h4>
-            <p class="feature-text text-muted">
-                We follow strict health and safety protocols to ensure your safety and well-being.
-            </p>
-        </div>
-
+<div class="container py-4 position-relative">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+      <h3 class="fw-bold" style="color: #1c1c1c;">Bread & Grains</h3>
+      <p class="text-muted small mb-0">Fresh bakery items.</p>
     </div>
+    <div>
+      <button class="btn btn-sm btn-outline-secondary rounded-circle me-1"
+        onclick="scrollContainer('bread-scroll', -300)"><i class="fas fa-chevron-left"></i></button>
+      <button class="btn btn-sm btn-outline-secondary rounded-circle" onclick="scrollContainer('bread-scroll', 300)"><i
+          class="fas fa-chevron-right"></i></button>
+    </div>
+  </div>
+  <div class="scrolling-wrapper" id="bread-scroll">
+    <?php if (!empty($data['bread_grains'])): ?>
+    <?php foreach ($data['bread_grains'] as $product): ?>
+    <div class="scrolling-card">
+      <?php include '../app/views/includes/product_card_template.php'; ?>
+    </div>
+    <?php endforeach; ?>
+    <?php else: ?><p class="text-muted ms-2">No products available.</p><?php endif; ?>
+  </div>
+</div>
+
+<div class="w-100 py-4" style="background-color: #FBF9F1;">
+  <div class="container position-relative">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div>
+        <h3 class="fw-bold" style="color: #1c1c1c;">Dairy & Eggs</h3>
+        <p class="text-muted small mb-0">Farm fresh milk, cheese, and eggs.</p>
+      </div>
+      <div>
+        <button class="btn btn-sm btn-outline-secondary rounded-circle me-1"
+          onclick="scrollContainer('dairy-scroll', -300)"><i class="fas fa-chevron-left"></i></button>
+        <button class="btn btn-sm btn-outline-secondary rounded-circle"
+          onclick="scrollContainer('dairy-scroll', 300)"><i class="fas fa-chevron-right"></i></button>
+      </div>
+    </div>
+    <div class="scrolling-wrapper" id="dairy-scroll">
+      <?php if (!empty($data['dairy_eggs'])): ?>
+      <?php foreach ($data['dairy_eggs'] as $product): ?>
+      <div class="scrolling-card">
+        <?php include '../app/views/includes/product_card_template.php'; ?>
+      </div>
+      <?php endforeach; ?>
+      <?php else: ?><p class="text-muted ms-2">No products available.</p><?php endif; ?>
+    </div>
+  </div>
+</div>
+
+<div class="container py-4 position-relative">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+      <h3 class="fw-bold" style="color: #1c1c1c;">Household Goods</h3>
+      <p class="text-muted small mb-0">Essentials for your home.</p>
+    </div>
+    <div>
+      <button class="btn btn-sm btn-outline-secondary rounded-circle me-1"
+        onclick="scrollContainer('household-scroll', -300)"><i class="fas fa-chevron-left"></i></button>
+      <button class="btn btn-sm btn-outline-secondary rounded-circle"
+        onclick="scrollContainer('household-scroll', 300)"><i class="fas fa-chevron-right"></i></button>
+    </div>
+  </div>
+  <div class="scrolling-wrapper" id="household-scroll">
+    <?php if (!empty($data['household'])): ?>
+    <?php foreach ($data['household'] as $product): ?>
+    <div class="scrolling-card">
+      <?php include '../app/views/includes/product_card_template.php'; ?>
+    </div>
+    <?php endforeach; ?>
+    <?php else: ?><p class="text-muted ms-2">No products available.</p><?php endif; ?>
+  </div>
+</div>
+
+<div class="container py-5 mb-5">
+  <div class="row g-4 justify-content-center">
+    <div class="col-md-6 col-lg-4">
+      <div class="feature-card card-pickup">
+        <div class="icon-circle"><i class="fas fa-shopping-basket"></i></div>
+        <h4 class="feature-title">Store Pickup</h4>
+        <p class="feature-text">Order online and collect your fresh groceries curbside or in-store at your convenience.
+        </p>
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-4">
+      <div class="feature-card card-delivery">
+        <div class="icon-circle"><i class="fas fa-truck-fast"></i></div>
+        <h4 class="feature-title">Express Delivery</h4>
+        <p class="feature-text">Get your essentials delivered to your doorstep the very same day with our rapid fleet.
+        </p>
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-4">
+      <div class="feature-card card-safety">
+        <div class="icon-circle"><i class="fas fa-shield-heart"></i></div>
+        <h4 class="feature-title">Hygiene Guaranteed</h4>
+        <p class="feature-text">We follow strict handling and safety protocols to ensure your well-being with every
+          order.</p>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 <script>
-    $(document).ready(function(){
-        $("#weeklyDealsSlider").owlCarousel({
-            loop: true, margin: 20, nav: true, dots: false,
-            navText: ["<", ">"],
-            responsive: { 0: { items: 1 }, 600: { items: 2 }, 1000: { items: 4 } }
+function scrollContainer(id, amount) {
+  document.getElementById(id).scrollBy({
+    left: amount,
+    behavior: 'smooth'
+  });
+}
+
+// AJAX ADD TO CART
+document.addEventListener('DOMContentLoaded', function() {
+  const forms = document.querySelectorAll('.add-cart-form-clean');
+  forms.forEach(form => {
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const button = form.querySelector('button[type="submit"]');
+      button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+      button.disabled = true;
+      button.style.borderColor = "#ccc";
+      button.style.color = "#ccc";
+
+      const headers = {
+        'X-Requested-With': 'XMLHttpRequest'
+      };
+      const formData = new FormData(this);
+
+      fetch(this.action, {
+          method: 'POST',
+          headers: headers,
+          body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+          const desktopBadge = document.getElementById('cart-count');
+          const mobileBadge = document.getElementById('mobile-cart-count');
+          if (desktopBadge) desktopBadge.innerText = data.new_count;
+          if (mobileBadge) mobileBadge.innerText = data.new_count;
+
+          const cartLink = document.createElement('a');
+          cartLink.href = "<?php echo URLROOT; ?>/cart";
+          cartLink.className = "btn-go-cart";
+          cartLink.innerHTML = "GO TO CART";
+          button.replaceWith(cartLink);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          button.innerHTML = "ADD";
+          button.disabled = false;
+          button.style.borderColor = "";
+          button.style.color = "";
         });
     });
-
-    function increaseQty(btn) {
-        let input = btn.previousElementSibling;
-        input.value = parseInt(input.value) + 1;
-    }
-    function decreaseQty(btn) {
-        let input = btn.nextElementSibling;
-        if(parseInt(input.value) > 1) {
-            input.value = parseInt(input.value) - 1;
-        }
-    }
-
-    // UPDATE 3: AJAX Add to Cart Script
-    document.addEventListener('DOMContentLoaded', function() {
-        const forms = document.querySelectorAll('.add-cart-form');
-
-        forms.forEach(form => {
-            form.addEventListener('submit', function(e) {
-                e.preventDefault(); 
-
-                const button = form.querySelector('button[type="submit"]');
-                const originalText = button.innerHTML; 
-
-                const headers = { 'X-Requested-With': 'XMLHttpRequest' };
-                const formData = new FormData(this);
-
-                fetch(this.action, {
-                    method: 'POST',
-                    headers: headers, 
-                    body: formData
-                })
-                .then(response => response.json()) 
-                .then(data => {
-                    // Update BOTH Mobile and Desktop Cart Icons
-                    const desktopBadge = document.getElementById('cart-count');
-                    const mobileBadge = document.getElementById('mobile-cart-count');
-
-                    if (desktopBadge) desktopBadge.innerText = data.new_count;
-                    if (mobileBadge) mobileBadge.innerText = data.new_count;
-
-                    // Visual Feedback
-                    button.innerHTML = "ADDED!";
-                    button.style.backgroundColor = "#000"; 
-                    button.style.color = "#fff";
-                    
-                    setTimeout(() => {
-                        button.innerHTML = originalText;
-                        button.style.backgroundColor = ""; 
-                        button.style.color = "";
-                    }, 2000);
-                })
-                .catch(error => console.error('Error:', error));
-            });
-        });
-    });
+  });
+});
 </script>
 
 <?php require_once '../app/views/includes/footer.php'; ?>

@@ -11,3 +11,16 @@ function ensureAdmin() {
         redirect('pages/index'); // Send them back home
     }
 }
+
+// FUNCTION: Count Pending Orders for Sidebar Badge
+function getNewOrderCount() {
+    // We instantiate the Database class directly to avoid loading Models in Views
+    // (Assuming your Database library is at app/libraries/Database.php)
+    $db = new Database();
+    
+    $db->query("SELECT COUNT(*) as count FROM orders WHERE order_status = 'pending'");
+    $row = $db->single();
+    
+    return ($row) ? $row->count : 0;
+}
+?>

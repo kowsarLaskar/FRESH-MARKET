@@ -58,6 +58,18 @@
         .sidebar { margin-left: -250px; }
         .content-wrapper, .main-content { margin-left: 0; }
     }
+
+    /* --- SPECIFIC STYLES FOR BADGE IN SIDEBAR --- */
+         /* Add this to your main CSS or <style> block */
+    @keyframes pulse-red {
+        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7); }
+        70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); }
+        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+    }
+
+.badge.bg-danger {
+    animation: pulse-red 2s infinite;
+}
 </style>
 
 <div class="sidebar">
@@ -83,8 +95,21 @@
             <i class="fas fa-list"></i> Categories
         </a>
 
-        <a href="<?php echo URLROOT; ?>/adminOrders" class="nav-link <?php echo (strpos($url, 'adminOrders') !== false) ? 'active' : ''; ?>">
-            <i class="fas fa-shopping-cart"></i> Orders
+        <a href="<?php echo URLROOT; ?>/adminOrders" class="nav-link <?php echo (strpos($url, 'adminOrders') !== false) ? 'active' : ''; ?> d-flex justify-content-between align-items-center">
+            <div>
+                <i class="fas fa-shopping-cart"></i> Orders
+            </div>
+            
+            <?php 
+                // Call the helper function
+                $newOrders = getNewOrderCount(); 
+            ?>
+            
+            <?php if($newOrders > 0): ?>
+                <span class="badge bg-danger rounded-pill shadow-sm" style="font-size: 0.75rem;">
+                    <?php echo $newOrders; ?>
+                </span>
+            <?php endif; ?>
         </a>
 
         <a href="<?php echo URLROOT; ?>/payouts" class="nav-link <?php echo (strpos($url, 'payouts') !== false) ? 'active' : ''; ?>">
