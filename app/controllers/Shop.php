@@ -40,4 +40,36 @@ class Shop extends Controller
 
         $this->view('shop/index', $data);
     }
+
+    // This method handles URLs like /shop/product/5
+    public function product($id = null)
+    {
+        if ($id == null) redirect('shop');
+
+        // 1. Fetch current product
+        $product = $this->productModel->getProductById($id);
+
+        if (!$product) redirect('shop');
+
+        // 2. Fetch Similar Products (Same Category, Exclude Current ID)
+        // You might need to add a 'limit' to your model method if you only want 4 items
+        // For now, let's assume getProductsByCategory takes an optional limit or we slice it here
+        $similarProducts = $this->productModel->getProductsByCategory($product->category_id);
+
+        // Filter out the current product from the list
+        $similarProducts = array_filter($similarProducts, function ($p) use ($id) {
+            return $p->product_id != $id;
+        });
+
+        // Limit to 4 items for the display
+        $similarProducts = array_slice($similarProducts, 0, 5);
+
+        $data = [
+            'title' => $product->name,
+            'product' => $product,
+            'similar_products' => $similarProducts // Pass this to the view
+        ];
+
+        $this->view('shop/product_display', $data);
+    }
 }

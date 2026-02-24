@@ -60,4 +60,22 @@ class Product
         $this->db->bind(':id', $id);
         return $this->db->resultSet();
     }
+    // Get a single product by its ID
+    public function getProductById($id)
+    {
+        // Prepare SQL statement to find product by ID and ensure it's active (status=1)
+        $this->db->query("SELECT * FROM products WHERE product_id = :id AND status = '1'");
+        // Bind the ID parameter
+        $this->db->bind(':id', $id);
+
+        // Fetch a single row object
+        $row = $this->db->single();
+
+        // Check if row was found
+        if ($this->db->rowCount() > 0) {
+            return $row;
+        } else {
+            return false;
+        }
+    }
 }

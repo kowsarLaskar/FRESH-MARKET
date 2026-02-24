@@ -1,16 +1,19 @@
 <?php
-class Users extends Controller {
+class Users extends Controller
+{
     private $userModel;
-    
-    public function __construct() {
+
+    public function __construct()
+    {
         $this->userModel = $this->model('User');
     }
 
-    public function register() {
+    public function register()
+    {
         // Check for POST
-        if($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Process form
-            
+
             // Sanitize POST data
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
@@ -31,61 +34,59 @@ class Users extends Controller {
             // SECURITY: Whitelist Roles
             // Only allow 'customer' or 'delivery_boy'. If 'admin' is sent, force to 'customer'.
             $allowed_roles = ['customer', 'delivery_boy'];
-            if(!in_array($data['role'], $allowed_roles)){
+            if (!in_array($data['role'], $allowed_roles)) {
                 $data['role'] = 'customer';
             }
 
             // Validate Email
-            if(empty($data['email'])) {
+            if (empty($data['email'])) {
                 $data['email_err'] = 'Please enter email';
             } else {
                 // Check email availability
-                if($this->userModel->findUserByEmail($data['email'])) {
+                if ($this->userModel->findUserByEmail($data['email'])) {
                     $data['email_err'] = 'Email is already taken';
                 }
             }
 
             // Validate Name
-            if(empty($data['name'])) {
+            if (empty($data['name'])) {
                 $data['name_err'] = 'Please enter name';
             }
 
             // Validate Password
-            if(empty($data['password'])) {
+            if (empty($data['password'])) {
                 $data['password_err'] = 'Please enter password';
-            } elseif(strlen($data['password']) < 6) {
+            } elseif (strlen($data['password']) < 6) {
                 $data['password_err'] = 'Password must be at least 6 characters';
             }
 
             // Validate Confirm Password
-            if(empty($data['confirm_password'])) {
+            if (empty($data['confirm_password'])) {
                 $data['confirm_password_err'] = 'Please confirm password';
             } else {
-                if($data['password'] != $data['confirm_password']) {
+                if ($data['password'] != $data['confirm_password']) {
                     $data['confirm_password_err'] = 'Passwords do not match';
                 }
             }
 
             // Make sure errors are empty
-            if(empty($data['email_err']) && empty($data['name_err']) && empty($data['password_err']) && empty($data['confirm_password_err'])) {
+            if (empty($data['email_err']) && empty($data['name_err']) && empty($data['password_err']) && empty($data['confirm_password_err'])) {
                 // Validated
-                
+
                 // Hash Password
                 $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 
                 // Register User
-                if($this->userModel->register($data)) {
+                if ($this->userModel->register($data)) {
                     // Redirect to login page
                     header('location: ' . URLROOT . '/users/login');
                 } else {
                     die('Something went wrong');
                 }
-
             } else {
                 // Load view with errors
                 $this->view('users/register', $data);
             }
-
         } else {
             // Init data for GET request (Show empty form)
             $data = [
@@ -106,43 +107,44 @@ class Users extends Controller {
         }
     }
 
-    public function login() {
+    public function login()
+    {
         // Check for POST
-        if($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Process form
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            
+
             $data = [
                 'email' => trim($_POST['email']),
                 'password' => trim($_POST['password']),
                 'email_err' => '',
-                'password_err' => '',      
+                'password_err' => '',
             ];
 
             // Validate Email
-            if(empty($data['email'])) {
+            if (empty($data['email'])) {
                 $data['email_err'] = 'Please enter email';
             }
 
             // Validate Password
-            if(empty($data['password'])) {
+            if (empty($data['password'])) {
                 $data['password_err'] = 'Please enter password';
             }
 
             // Check for user/email
-            if($this->userModel->findUserByEmail($data['email'])) {
+            if ($this->userModel->findUserByEmail($data['email'])) {
                 // User found
             } else {
                 $data['email_err'] = 'No user found';
             }
 
             // Make sure errors are empty
-            if(empty($data['email_err']) && empty($data['password_err'])) {
+            if (empty($data['email_err']) && empty($data['password_err'])) {
                 // Validated
                 // Check and set logged in user
                 $loggedInUser = $this->userModel->login($data['email'], $data['password']);
 
-                if($loggedInUser) {
+                if ($loggedInUser) {
                     // Create Session (UPDATED: Calling the internal method)
                     $this->createUserSession($loggedInUser);
                 } else {
@@ -153,7 +155,6 @@ class Users extends Controller {
                 // Load view with errors
                 $this->view('users/login', $data);
             }
-
         } else {
             // Init data
             $data = [
@@ -169,7 +170,8 @@ class Users extends Controller {
     }
 
     // NEW FUNCTION: Handles Redirection based on Role
-    public function createUserSession($user) {
+    public function createUserSession($user)
+    {
         $_SESSION['user_id'] = $user->user_id;
         $_SESSION['user_email'] = $user->email;
         $_SESSION['user_name'] = $user->full_name;
@@ -177,21 +179,21 @@ class Users extends Controller {
 
         // Redirect based on Role
         if ($user->role == 'admin') {
-            redirect('admin'); 
-        } 
-        elseif ($user->role == 'delivery_boy') {
-            redirect('delivery'); 
-        } 
-        else {
-            redirect('pages/index'); 
+            redirect('admin');
+        } elseif ($user->role == 'delivery_boy') {
+            redirect('delivery');
+        } else {
+            redirect('pages/index');
         }
     }
 
-    public function logout() {
+    public function logout()
+    {
         unset($_SESSION['user_id']);
         unset($_SESSION['user_email']);
         unset($_SESSION['user_name']);
         unset($_SESSION['user_role']);
+        unset($_SESSION['cart']);
         session_destroy();
         redirect('users/login');
     }

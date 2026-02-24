@@ -220,10 +220,10 @@ $cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'
                             <a class="nav-link <?php echo $shop_active; ?>" href="<?php echo URLROOT; ?>/shop">Shop</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link <?php echo $about_active; ?>" href="#">About</a>
+                            <a class="nav-link <?php echo $about_active; ?>" href="<?php echo URLROOT; ?>/Pages/about">About</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link <?php echo $contact_active; ?>" href="#">Contact</a>
+                            <a class="nav-link <?php echo $contact_active; ?>" href="<?php echo URLROOT; ?>/Pages/contact">Contact</a>
                         </li>
                     </ul>
 

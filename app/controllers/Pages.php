@@ -29,4 +29,27 @@ class Pages extends Controller
 
         $this->view('pages/index', $data);
     }
+
+    public function about()
+    {
+        $data = [
+            'title' => 'About Us'
+        ];
+
+        // This loads the file: app/views/pages/about.php
+        $this->view('pages/about', $data);
+    }
+
+    // --- ADD THIS TO Pages.php ---
+    public function contact()
+    {
+        $data = [
+            'title' => 'Contact Us',
+            'address' => '123, Central Road, Agartala, Tripura - 799001',
+            'phone' => '+91 98765 43210',
+            'email' => 'hello@freshmarket.com'
+        ];
+
+        $this->view('pages/contact', $data);
+    }
 }

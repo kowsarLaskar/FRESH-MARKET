@@ -2,283 +2,283 @@
 <?php require_once '../app/views/includes/header.php'; ?>
 
 <style>
-/* --- GENERAL STYLES --- */
-body {
-  background-color: #FBF9F1;
-}
+  /* --- GENERAL STYLES --- */
+  body {
+    background-color: #FBF9F1;
+  }
 
-/* --- BANNER & CATEGORY STYLES --- */
-.banner-container {
-  width: 100%;
-  margin-bottom: 30px;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-  mix-blend-mode: multiply;
-}
+  /* --- BANNER & CATEGORY STYLES --- */
+  .banner-container {
+    width: 100%;
+    margin-bottom: 30px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    mix-blend-mode: multiply;
+  }
 
-.banner-img {
-  width: 100%;
-  height: auto;
-  display: block;
-  object-fit: cover;
-}
+  .banner-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+  }
 
-.category-card {
-  border-radius: 12px;
-  overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-  background: #fff;
-  height: 100%;
-}
+  .category-card {
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    background: #fff;
+    height: 100%;
+  }
 
-.category-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-}
+  .category-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  }
 
-.category-img {
-  width: 100%;
-  height: auto;
-  display: block;
-  object-fit: cover;
-}
+  .category-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+  }
 
-/* --- PRODUCT CARD STYLES (Amul Design) --- */
-.product-card-clean {
-  background: #fff;
-  border: 1px solid #e0e0e0;
-  border-radius: 12px;
-  padding: 10px;
-  text-align: left;
-  position: relative;
-  height: 100%;
-  transition: box-shadow 0.2s ease;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
+  /* --- PRODUCT CARD STYLES (Amul Design) --- */
+  .product-card-clean {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 10px;
+    text-align: left;
+    position: relative;
+    height: 100%;
+    transition: box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
 
-.product-card-clean:hover {
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-  border-color: transparent;
-}
+  .product-card-clean:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    border-color: transparent;
+  }
 
-.pc-img-wrap {
-  height: 130px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 10px;
-  overflow: hidden;
-}
+  .pc-img-wrap {
+    height: 130px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
 
-.pc-img-wrap img {
-  max-height: 100%;
-  max-width: 100%;
-  object-fit: contain;
-  transition: transform 0.3s;
-}
+  .pc-img-wrap img {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+    transition: transform 0.3s;
+  }
 
-.product-card-clean:hover .pc-img-wrap img {
-  transform: scale(1.05);
-}
+  .product-card-clean:hover .pc-img-wrap img {
+    transform: scale(1.05);
+  }
 
-.pc-time-badge {
-  background: #F1F4F6;
-  color: #333;
-  font-size: 0.6rem;
-  font-weight: 700;
-  padding: 2px 6px;
-  border-radius: 4px;
-  display: inline-flex;
-  align-items: center;
-  width: fit-content;
-  margin-bottom: 8px;
-}
+  .pc-time-badge {
+    background: #F1F4F6;
+    color: #333;
+    font-size: 0.6rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    margin-bottom: 8px;
+  }
 
-.pc-title {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #1c1c1c;
-  margin-bottom: 4px;
-  line-height: 1.3;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  height: 2.6em;
-}
+  .pc-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #1c1c1c;
+    margin-bottom: 4px;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    height: 2.6em;
+  }
 
-.pc-unit {
-  color: #888;
-  font-size: 0.8rem;
-  margin-bottom: 10px;
-}
+  .pc-unit {
+    color: #888;
+    font-size: 0.8rem;
+    margin-bottom: 10px;
+  }
 
-.pc-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: auto;
-}
+  .pc-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+  }
 
-.pc-price-box {
-  display: flex;
-  flex-direction: column;
-}
+  .pc-price-box {
+    display: flex;
+    flex-direction: column;
+  }
 
-.pc-price {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #1c1c1c;
-}
+  .pc-price {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #1c1c1c;
+  }
 
-.pc-old-price {
-  font-size: 0.75rem;
-  text-decoration: line-through;
-  color: #999;
-}
+  .pc-old-price {
+    font-size: 0.75rem;
+    text-decoration: line-through;
+    color: #999;
+  }
 
-.btn-add-outline {
-  background-color: #fff;
-  color: #2A6049;
-  border: 1px solid #2A6049;
-  padding: 5px 18px;
-  border-radius: 6px;
-  font-weight: 600;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: all 0.2s;
-}
+  .btn-add-outline {
+    background-color: #fff;
+    color: #2A6049;
+    border: 1px solid #2A6049;
+    padding: 5px 18px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
 
-.btn-add-outline:hover {
-  background-color: #2A6049;
-  color: #fff;
-}
+  .btn-add-outline:hover {
+    background-color: #2A6049;
+    color: #fff;
+  }
 
-.btn-go-cart {
-  background-color: #2A6049 !important;
-  color: #fff !important;
-  border: 1px solid #2A6049 !important;
-  text-decoration: none;
-  display: inline-block;
-  text-align: center;
-  padding: 5px 10px;
-  border-radius: 6px;
-  font-weight: 600;
-  font-size: 0.75rem;
-  width: 100%;
-  white-space: nowrap;
-}
+  .btn-go-cart {
+    background-color: #2A6049 !important;
+    color: #fff !important;
+    border: 1px solid #2A6049 !important;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.75rem;
+    width: 100%;
+    white-space: nowrap;
+  }
 
-/* --- HORIZONTAL SCROLL STYLES --- */
-.scrolling-wrapper {
-  display: flex;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-  padding-bottom: 20px;
-  scrollbar-width: none;
-}
+  /* --- HORIZONTAL SCROLL STYLES --- */
+  .scrolling-wrapper {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 20px;
+    scrollbar-width: none;
+  }
 
-.scrolling-wrapper::-webkit-scrollbar {
-  display: none;
-}
+  .scrolling-wrapper::-webkit-scrollbar {
+    display: none;
+  }
 
-.scrolling-card {
-  flex: 0 0 auto;
-  width: 220px;
-  margin-right: 15px;
-}
+  .scrolling-card {
+    flex: 0 0 auto;
+    width: 220px;
+    margin-right: 15px;
+  }
 
-/* --- FEATURE CARD STYLES --- */
-.feature-card {
-  border-radius: 16px;
-  padding: 40px 30px;
-  text-align: center;
-  height: 100%;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: 1px solid transparent;
-}
+  /* --- FEATURE CARD STYLES --- */
+  .feature-card {
+    border-radius: 16px;
+    padding: 40px 30px;
+    text-align: center;
+    height: 100%;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid transparent;
+  }
 
-.feature-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
-}
+  .feature-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+  }
 
-.card-pickup {
-  background-color: #F5EBE0;
-  color: #5D4037;
-}
+  .card-pickup {
+    background-color: #F5EBE0;
+    color: #5D4037;
+  }
 
-.card-pickup .icon-circle {
-  background-color: #D7CCC8;
-  color: #5D4037;
-}
+  .card-pickup .icon-circle {
+    background-color: #D7CCC8;
+    color: #5D4037;
+  }
 
-.card-delivery {
-  background-color: #D3E0EA;
-  color: #00695C;
-}
+  .card-delivery {
+    background-color: #D3E0EA;
+    color: #00695C;
+  }
 
-.card-delivery .icon-circle {
-  background-color: #B4C6D4;
-  color: #2C3E50;
-}
+  .card-delivery .icon-circle {
+    background-color: #B4C6D4;
+    color: #2C3E50;
+  }
 
-.card-delivery .feature-title,
-.card-delivery p {
-  color: #2C3E50;
-}
+  .card-delivery .feature-title,
+  .card-delivery p {
+    color: #2C3E50;
+  }
 
-.card-safety {
-  background-color: #E6EAD6;
-  color: #33691E;
-}
+  .card-safety {
+    background-color: #E6EAD6;
+    color: #33691E;
+  }
 
-.card-safety .icon-circle {
-  background-color: #C9D6B8;
-  color: #3E4E38;
-}
+  .card-safety .icon-circle {
+    background-color: #C9D6B8;
+    color: #3E4E38;
+  }
 
-.card-safety .feature-title,
-.card-safety p {
-  color: #3E4E38;
-}
+  .card-safety .feature-title,
+  .card-safety p {
+    color: #3E4E38;
+  }
 
-.icon-circle {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 25px auto;
-  font-size: 2rem;
-  transition: transform 0.3s ease;
-}
+  .icon-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px auto;
+    font-size: 2rem;
+    transition: transform 0.3s ease;
+  }
 
-.feature-card:hover .icon-circle {
-  transform: scale(1.1) rotate(5deg);
-}
+  .feature-card:hover .icon-circle {
+    transform: scale(1.1) rotate(5deg);
+  }
 
-.feature-title {
-  font-weight: 700;
-  font-size: 1.25rem;
-  margin-bottom: 12px;
-}
+  .feature-title {
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin-bottom: 12px;
+  }
 
-.feature-text {
-  font-weight: 500;
-  font-size: 0.95rem;
-  line-height: 1.6;
-  opacity: 0.85;
-  margin-bottom: 0;
-}
+  .feature-text {
+    font-weight: 500;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    opacity: 0.85;
+    margin-bottom: 0;
+  }
 </style>
 
 <div class="container my-5">
@@ -322,15 +322,15 @@ body {
   </div>
   <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-3">
     <?php if (!empty($data['deals'])): ?>
-    <?php foreach ($data['deals'] as $product): ?>
-    <div class="col">
-      <?php include '../app/views/includes/product_card_template.php'; ?>
-    </div>
-    <?php endforeach; ?>
+      <?php foreach ($data['deals'] as $product): ?>
+        <div class="col">
+          <?php include '../app/views/includes/product_card_template.php'; ?>
+        </div>
+      <?php endforeach; ?>
     <?php else: ?>
-    <div class="col-12">
-      <p class="text-center">No deals available.</p>
-    </div>
+      <div class="col-12">
+        <p class="text-center">No deals available.</p>
+      </div>
     <?php endif; ?>
   </div>
 </div>
@@ -347,15 +347,15 @@ body {
     </div>
     <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-3">
       <?php if (!empty($data['grab_n_go'])): ?>
-      <?php foreach ($data['grab_n_go'] as $product): ?>
-      <div class="col">
-        <?php include '../app/views/includes/product_card_template.php'; ?>
-      </div>
-      <?php endforeach; ?>
+        <?php foreach ($data['grab_n_go'] as $product): ?>
+          <div class="col">
+            <?php include '../app/views/includes/product_card_template.php'; ?>
+          </div>
+        <?php endforeach; ?>
       <?php else: ?>
-      <div class="col-12">
-        <p class="text-center w-100">No products available.</p>
-      </div>
+        <div class="col-12">
+          <p class="text-center w-100">No products available.</p>
+        </div>
       <?php endif; ?>
     </div>
   </div>
@@ -376,11 +376,11 @@ body {
   </div>
   <div class="scrolling-wrapper" id="bread-scroll">
     <?php if (!empty($data['bread_grains'])): ?>
-    <?php foreach ($data['bread_grains'] as $product): ?>
-    <div class="scrolling-card">
-      <?php include '../app/views/includes/product_card_template.php'; ?>
-    </div>
-    <?php endforeach; ?>
+      <?php foreach ($data['bread_grains'] as $product): ?>
+        <div class="scrolling-card">
+          <?php include '../app/views/includes/product_card_template.php'; ?>
+        </div>
+      <?php endforeach; ?>
     <?php else: ?><p class="text-muted ms-2">No products available.</p><?php endif; ?>
   </div>
 </div>
@@ -401,11 +401,11 @@ body {
     </div>
     <div class="scrolling-wrapper" id="dairy-scroll">
       <?php if (!empty($data['dairy_eggs'])): ?>
-      <?php foreach ($data['dairy_eggs'] as $product): ?>
-      <div class="scrolling-card">
-        <?php include '../app/views/includes/product_card_template.php'; ?>
-      </div>
-      <?php endforeach; ?>
+        <?php foreach ($data['dairy_eggs'] as $product): ?>
+          <div class="scrolling-card">
+            <?php include '../app/views/includes/product_card_template.php'; ?>
+          </div>
+        <?php endforeach; ?>
       <?php else: ?><p class="text-muted ms-2">No products available.</p><?php endif; ?>
     </div>
   </div>
@@ -426,11 +426,11 @@ body {
   </div>
   <div class="scrolling-wrapper" id="household-scroll">
     <?php if (!empty($data['household'])): ?>
-    <?php foreach ($data['household'] as $product): ?>
-    <div class="scrolling-card">
-      <?php include '../app/views/includes/product_card_template.php'; ?>
-    </div>
-    <?php endforeach; ?>
+      <?php foreach ($data['household'] as $product): ?>
+        <div class="scrolling-card">
+          <?php include '../app/views/includes/product_card_template.php'; ?>
+        </div>
+      <?php endforeach; ?>
     <?php else: ?><p class="text-muted ms-2">No products available.</p><?php endif; ?>
   </div>
 </div>
@@ -466,58 +466,58 @@ body {
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
-function scrollContainer(id, amount) {
-  document.getElementById(id).scrollBy({
-    left: amount,
-    behavior: 'smooth'
-  });
-}
+  function scrollContainer(id, amount) {
+    document.getElementById(id).scrollBy({
+      left: amount,
+      behavior: 'smooth'
+    });
+  }
 
-// AJAX ADD TO CART
-document.addEventListener('DOMContentLoaded', function() {
-  const forms = document.querySelectorAll('.add-cart-form-clean');
-  forms.forEach(form => {
-    form.addEventListener('submit', function(e) {
-      e.preventDefault();
-      const button = form.querySelector('button[type="submit"]');
-      button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-      button.disabled = true;
-      button.style.borderColor = "#ccc";
-      button.style.color = "#ccc";
+  // AJAX ADD TO CART
+  document.addEventListener('DOMContentLoaded', function() {
+    const forms = document.querySelectorAll('.add-cart-form-clean');
+    forms.forEach(form => {
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const button = form.querySelector('button[type="submit"]');
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        button.disabled = true;
+        button.style.borderColor = "#ccc";
+        button.style.color = "#ccc";
 
-      const headers = {
-        'X-Requested-With': 'XMLHttpRequest'
-      };
-      const formData = new FormData(this);
+        const headers = {
+          'X-Requested-With': 'XMLHttpRequest'
+        };
+        const formData = new FormData(this);
 
-      fetch(this.action, {
-          method: 'POST',
-          headers: headers,
-          body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-          const desktopBadge = document.getElementById('cart-count');
-          const mobileBadge = document.getElementById('mobile-cart-count');
-          if (desktopBadge) desktopBadge.innerText = data.new_count;
-          if (mobileBadge) mobileBadge.innerText = data.new_count;
+        fetch(this.action, {
+            method: 'POST',
+            headers: headers,
+            body: formData
+          })
+          .then(response => response.json())
+          .then(data => {
+            const desktopBadge = document.getElementById('cart-count');
+            const mobileBadge = document.getElementById('mobile-cart-count');
+            if (desktopBadge) desktopBadge.innerText = data.new_count;
+            if (mobileBadge) mobileBadge.innerText = data.new_count;
 
-          const cartLink = document.createElement('a');
-          cartLink.href = "<?php echo URLROOT; ?>/cart";
-          cartLink.className = "btn-go-cart";
-          cartLink.innerHTML = "GO TO CART";
-          button.replaceWith(cartLink);
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          button.innerHTML = "ADD";
-          button.disabled = false;
-          button.style.borderColor = "";
-          button.style.color = "";
-        });
+            const cartLink = document.createElement('a');
+            cartLink.href = "<?php echo URLROOT; ?>/cart";
+            cartLink.className = "btn-go-cart";
+            cartLink.innerHTML = "GO TO CART";
+            button.replaceWith(cartLink);
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            button.innerHTML = "ADD";
+            button.disabled = false;
+            button.style.borderColor = "";
+            button.style.color = "";
+          });
+      });
     });
   });
-});
 </script>
 
 <?php require_once '../app/views/includes/footer.php'; ?>

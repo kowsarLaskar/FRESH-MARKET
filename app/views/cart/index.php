@@ -2,20 +2,26 @@
 
 <style>
     /* --- CART PAGE STYLING --- */
-    body { background-color: #FBF9F1; }
+    body {
+        background-color: #FBF9F1;
+    }
 
     /* NEW: Constrain the width of the main content */
     .cart-body-wrapper {
-        max-width: 1100px; /* Prevents it from getting too wide on large screens */
-        margin: 0 auto;    /* Centers the block */
+        max-width: 1100px;
+        /* Prevents it from getting too wide on large screens */
+        margin: 0 auto;
+        /* Centers the block */
     }
 
     /* Table Styles */
     .cart-table {
         width: 100%;
         border-collapse: separate;
-        border-spacing: 0 15px; /* Adds space between rows */
+        border-spacing: 0 15px;
+        /* Adds space between rows */
     }
+
     .cart-table thead th {
         border-bottom: 1px solid #ccc;
         font-weight: 600;
@@ -24,15 +30,18 @@
         text-transform: uppercase;
         font-size: 0.85rem;
     }
+
     .cart-table tbody tr {
-        background-color: white; /* White row on cream bg */
-        box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        background-color: white;
+        /* White row on cream bg */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
     }
+
     .cart-table td {
         padding: 15px;
         vertical-align: middle;
     }
-    
+
     /* Product Info Column */
     .cart-product-link {
         display: flex;
@@ -40,6 +49,7 @@
         text-decoration: none;
         color: #333;
     }
+
     .cart-thumb {
         width: 60px;
         height: 60px;
@@ -47,6 +57,7 @@
         margin-right: 15px;
         border: 1px solid #eee;
     }
+
     .cart-prod-name {
         font-weight: 500;
         font-size: 1rem;
@@ -57,10 +68,12 @@
     .cart-qty-group {
         display: flex;
         align-items: center;
+        justify-content: center;
         border: 1px solid #ccc;
         width: 100px;
         height: 35px;
     }
+
     .cart-qty-btn {
         background: transparent;
         border: none;
@@ -69,6 +82,7 @@
         color: #555;
         cursor: pointer;
     }
+
     .cart-qty-val {
         border: none;
         width: 40px;
@@ -87,7 +101,10 @@
         background: none;
         border: none;
     }
-    .btn-remove:hover { color: #dc3545; }
+
+    .btn-remove:hover {
+        color: #dc3545;
+    }
 
     /* Order Summary Box */
     .summary-card {
@@ -95,8 +112,10 @@
         padding: 25px;
         border: 1px solid #eee;
         position: sticky;
-        top: 20px; /* Sticks when scrolling */
+        top: 20px;
+        /* Sticks when scrolling */
     }
+
     .summary-title {
         font-size: 1.2rem;
         font-weight: 700;
@@ -105,6 +124,7 @@
         padding-bottom: 15px;
         margin-bottom: 20px;
     }
+
     .summary-row {
         display: flex;
         justify-content: space-between;
@@ -112,6 +132,7 @@
         font-size: 0.95rem;
         color: #555;
     }
+
     .summary-total {
         display: flex;
         justify-content: space-between;
@@ -135,16 +156,18 @@
         margin-top: 25px;
         transition: background 0.3s;
     }
+
     .btn-checkout:hover {
         background-color: #1F4D3C;
         color: white;
     }
-    
+
     /* Empty Cart State */
     .empty-cart-container {
         text-align: center;
         padding: 80px 0;
     }
+
     .empty-cart-icon {
         font-size: 4rem;
         color: #ccc;
@@ -153,7 +176,7 @@
 </style>
 
 <div class="container py-5">
-    
+
     <div class="cart-body-wrapper">
 
         <div class="mb-4 breadcrumb">
@@ -162,8 +185,8 @@
             <span>My Cart</span>
         </div>
 
-        <?php if(empty($data['cart_items'])): ?>
-            
+        <?php if (empty($data['cart_items'])): ?>
+
             <div class="empty-cart-container">
                 <div class="empty-cart-icon">
                     <i class="fas fa-shopping-basket"></i>
@@ -176,7 +199,7 @@
         <?php else: ?>
 
             <div class="row">
-                
+
                 <div class="col-lg-8 mb-4">
                     <div class="table-responsive">
                         <table class="cart-table">
@@ -190,43 +213,48 @@
                                 </tr>
                             </thead>
                             <tbody>
-    <?php foreach($data['cart_items'] as $item): ?>
-    <tr>
-        <td>
-            <a href="<?php echo URLROOT; ?>/shop/product/<?php echo $item['product_id']; ?>" class="cart-product-link">
-                <img src="<?php echo URLROOT; ?>/assets/products/<?php echo $item['image']; ?>" alt="<?php echo $item['name']; ?>" class="cart-thumb">
-                <span class="cart-prod-name"><?php echo $item['name']; ?></span>
-            </a>
-        </td>
-        
-        <td><?php echo CURRENCY . $item['selling_price']; ?></td>
-        
-        <td>
-    <div class="cart-qty-group">
-        <a href="<?php echo URLROOT; ?>/cart/decrease/<?php echo $item['product_id']; ?>" class="cart-qty-btn" style="text-decoration:none; line-height:30px;">
-            -
-        </a>
-        
-        <input type="text" class="cart-qty-val" value="<?php echo $item['qty']; ?>" readonly>
-        
-        <a href="<?php echo URLROOT; ?>/cart/increase/<?php echo $item['product_id']; ?>" class="cart-qty-btn" style="text-decoration:none; line-height:30px;">
-            +
-        </a>
-    </div>
-</td>
-        
-        <td class="fw-bold">
-            <?php echo CURRENCY . number_format($item['selling_price'] * $item['qty'], 2); ?>
-        </td>
-        
-        <td class="text-end">
-            <a href="<?php echo URLROOT; ?>/cart/remove/<?php echo $item['product_id']; ?>" class="btn-remove" title="Remove Item">
-                <i class="fas fa-times"></i>
-            </a>
-        </td>
-    </tr>
-    <?php endforeach; ?>
-</tbody>
+                                <?php foreach ($data['cart_items'] as $item): ?>
+                                    <tr>
+                                        <td>
+                                            <a href="<?php echo URLROOT; ?>/shop/product/<?php echo $item['product_id']; ?>"
+                                                class="cart-product-link">
+                                                <img src="<?php echo URLROOT; ?>/assets/products/<?php echo $item['image']; ?>"
+                                                    alt="<?php echo $item['name']; ?>" class="cart-thumb">
+                                                <span class="cart-prod-name"><?php echo $item['name']; ?></span>
+                                            </a>
+                                        </td>
+
+                                        <td><?php echo CURRENCY . $item['selling_price']; ?></td>
+
+                                        <td>
+                                            <div class="cart-qty-group">
+                                                <a href="<?php echo URLROOT; ?>/cart/decrease/<?php echo $item['product_id']; ?>"
+                                                    class="cart-qty-btn" style="text-decoration:none; line-height:30px;">
+                                                    -
+                                                </a>
+
+                                                <input type="text" class="cart-qty-val" value="<?php echo $item['qty']; ?>" readonly>
+
+                                                <a href="<?php echo URLROOT; ?>/cart/increase/<?php echo $item['product_id']; ?>"
+                                                    class="cart-qty-btn" style="text-decoration:none; line-height:30px;">
+                                                    +
+                                                </a>
+                                            </div>
+                                        </td>
+
+                                        <td class="fw-bold">
+                                            <?php echo CURRENCY . number_format($item['selling_price'] * $item['qty'], 2); ?>
+                                        </td>
+
+                                        <td class="text-end">
+                                            <a href="<?php echo URLROOT; ?>/cart/remove/<?php echo $item['product_id']; ?>" class="btn-remove"
+                                                title="Remove Item">
+                                                <i class="fas fa-times"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -234,12 +262,12 @@
                 <div class="col-lg-4">
                     <div class="summary-card">
                         <div class="summary-title">Order Summary</div>
-                        
+
                         <div class="summary-row">
                             <span>Subtotal</span>
                             <span><?php echo CURRENCY . number_format($data['subtotal'], 2); ?></span>
                         </div>
-                        
+
                         <div class="summary-row">
                             <span>Estimate Delivery</span>
                             <span>Free</span>
@@ -253,7 +281,7 @@
                         <a href="<?php echo URLROOT; ?>/checkout" class="btn-checkout text-decoration-none d-block text-center">
                             Checkout
                         </a>
-                        
+
                         <div class="text-center mt-3 text-muted" style="font-size: 0.8rem;">
                             <i class="fas fa-lock me-1"></i> Secure Checkout
                         </div>
@@ -263,16 +291,18 @@
             </div>
 
         <?php endif; ?>
-    </div> </div>
+    </div>
+</div>
 
 <script>
     function increaseQty(btn) {
         let input = btn.previousElementSibling;
         input.value = parseInt(input.value) + 1;
     }
+
     function decreaseQty(btn) {
         let input = btn.nextElementSibling;
-        if(parseInt(input.value) > 1) {
+        if (parseInt(input.value) > 1) {
             input.value = parseInt(input.value) - 1;
         }
     }
