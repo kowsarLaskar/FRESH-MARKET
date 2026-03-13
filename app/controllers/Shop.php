@@ -9,16 +9,27 @@ class Shop extends Controller
     }
 
     // 1. Show All Products (Default)
+    // 1. Show All Products (Default)
     public function index()
     {
+        // 1. Capture Filter/Sort parameters from URL (if they exist)
+        $maxPrice = isset($_GET['max_price']) ? (int)$_GET['max_price'] : null;
+        $sortBy = isset($_GET['sort']) ? trim($_GET['sort']) : 'relevance';
+
+        // 2. Fetch categories for the sidebar
         $categories = $this->productModel->getCategories();
-        $products = $this->productModel->getShopProducts(); // Assumes getting all active products
+
+        // 3. Use the new dynamic function (Category is null because it's "All Products")
+        $products = $this->productModel->getFilteredProducts(null, $maxPrice, $sortBy);
 
         $data = [
             'title' => 'Shop All',
             'categories' => $categories,
             'products' => $products,
-            'current_category' => null // No specific category selected
+            'current_category' => null, // No specific category selected
+            // 4. Pass the current state back to the view
+            'current_max_price' => $maxPrice,
+            'current_sort' => $sortBy
         ];
 
         $this->view('shop/index', $data);
@@ -27,20 +38,29 @@ class Shop extends Controller
     // 2. Show Products by Category
     public function category($id)
     {
-        $categories = $this->productModel->getCategories(); // Still need list for sidebar
-        $products = $this->productModel->getProductsByCategory($id); // Filtered products
-        $currentCategory = $this->productModel->getCategoryById($id); // Get banner/name info
+        // 1. Capture Filter/Sort parameters from URL (if they exist)
+        $maxPrice = isset($_GET['max_price']) ? (int)$_GET['max_price'] : null;
+        $sortBy = isset($_GET['sort']) ? trim($_GET['sort']) : 'relevance';
+
+        // 2. Fetch data
+        $categories = $this->productModel->getCategories();
+        $currentCategory = $this->productModel->getCategoryById($id);
+
+        // 3. Use the new dynamic function (Passing the specific Category $id)
+        $products = $this->productModel->getFilteredProducts($id, $maxPrice, $sortBy);
 
         $data = [
             'title' => $currentCategory->name,
             'categories' => $categories,
             'products' => $products,
-            'current_category' => $currentCategory // Pass specific category data
+            'current_category' => $currentCategory,
+            // 4. Pass the current state back to the view
+            'current_max_price' => $maxPrice,
+            'current_sort' => $sortBy
         ];
 
         $this->view('shop/index', $data);
     }
-
     // This method handles URLs like /shop/product/5
     public function product($id = null)
     {

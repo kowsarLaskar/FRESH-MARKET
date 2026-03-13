@@ -78,4 +78,43 @@ class Product
             return false;
         }
     }
+    // NEW FUNCTION: Handles categories, max price, and sorting dynamically
+    public function getFilteredProducts($categoryId = null, $maxPrice = null, $sortBy = 'relevance')
+    {
+        $sql = "SELECT * FROM products WHERE status = 1";
+        $bindParams = [];
+
+        if ($categoryId != null) {
+            $sql .= " AND category_id = :category_id";
+            $bindParams[':category_id'] = $categoryId;
+        }
+
+        if ($maxPrice != null && $maxPrice > 0) {
+            $sql .= " AND selling_price <= :max_price";
+            $bindParams[':max_price'] = $maxPrice;
+        }
+
+        switch ($sortBy) {
+            case 'price_asc':
+                $sql .= " ORDER BY selling_price ASC";
+                break;
+            case 'price_desc':
+                $sql .= " ORDER BY selling_price DESC";
+                break;
+            case 'newest':
+                $sql .= " ORDER BY created_at DESC";
+                break;
+            default:
+                $sql .= " ORDER BY product_id DESC";
+                break;
+        }
+
+        $this->db->query($sql);
+
+        foreach ($bindParams as $param => $value) {
+            $this->db->bind($param, $value);
+        }
+
+        return $this->db->resultSet();
+    }
 }

@@ -343,7 +343,7 @@
   <div class="container">
     <div class="mb-4">
       <h3 class="fw-bold" style="color: #1c1c1c;">Grab 'N Go</h3>
-      <p class="text-muted small">Quick snacks and ready-to-eat items.</p>
+      <p class="text-muted small">Quick snacks and ready-to-eat items SNACKERS.</p>
     </div>
     <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-3">
       <?php if (!empty($data['grab_n_go'])): ?>

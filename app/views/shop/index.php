@@ -8,13 +8,36 @@
   /* --- STICKY SIDEBAR --- */
   .sticky-sidebar {
     position: -webkit-sticky;
-    /* For Safari */
     position: sticky;
     top: 100px;
-    /* Adjust based on your navbar height */
-    height: fit-content;
+
+    /* 1. Limit height to the viewport height (minus 130px for navbar/padding) */
+    max-height: calc(100vh - 130px);
+
+    /* 2. Turn on vertical scrolling if content overflows */
+    overflow-y: auto;
+
     z-index: 100;
-    padding-right: 20px;
+    padding-right: 15px;
+    /* Reduced slightly to make room for scrollbar */
+  }
+
+  /* Optional: Make the sidebar scrollbar look thin and clean */
+  .sticky-sidebar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .sticky-sidebar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .sticky-sidebar::-webkit-scrollbar-thumb {
+    background: #e0e0e0;
+    border-radius: 10px;
+  }
+
+  .sticky-sidebar::-webkit-scrollbar-thumb:hover {
+    background: #1F4D3C;
   }
 
   .sidebar-title {
@@ -264,10 +287,16 @@
 
         <div class="mb-5">
           <h3 class="sidebar-title">Filter by Price</h3>
-          <input type="range" class="form-range price-slider" min="0" max="1000" id="priceRange">
+
+          <?php
+          $currentPrice = (isset($data['current_max_price']) && $data['current_max_price'] != null) ? $data['current_max_price'] : 1000;
+          ?>
+          <input type="range" class="form-range price-slider" min="0" max="1000" id="priceRange"
+            value="<?php echo $currentPrice; ?>">
+
           <div class="d-flex justify-content-between mt-2 small fw-bold text-muted">
             <span>₹0</span>
-            <span>₹1000+</span>
+            <span id="priceDisplay">₹<?php echo $currentPrice; ?>+</span>
           </div>
         </div>
       </div>
@@ -313,14 +342,26 @@
 
       <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
         <span class="text-muted small fw-bold"><?php echo count($data['products']); ?> Items found</span>
+
+        <?php
+        $currentSort = isset($data['current_sort']) ? $data['current_sort'] : 'relevance';
+        $sortLabels = [
+          'relevance' => 'Relevance',
+          'price_asc' => 'Price: Low to High',
+          'price_desc' => 'Price: High to Low',
+          'newest' => 'Newest First'
+        ];
+        $activeLabel = isset($sortLabels[$currentSort]) ? $sortLabels[$currentSort] : 'Relevance';
+        ?>
         <div class="dropdown">
           <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-            Sort by: Relevance
+            Sort by: <?php echo $activeLabel; ?>
           </button>
           <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" href="#">Price: Low to High</a></li>
-            <li><a class="dropdown-item" href="#">Price: High to Low</a></li>
-            <li><a class="dropdown-item" href="#">Newest First</a></li>
+            <li><a class="dropdown-item sort-option" href="#" data-sort="price_asc">Price: Low to High</a></li>
+            <li><a class="dropdown-item sort-option" href="#" data-sort="price_desc">Price: High to Low</a></li>
+            <li><a class="dropdown-item sort-option" href="#" data-sort="newest">Newest First</a></li>
+            <li><a class="dropdown-item sort-option" href="#" data-sort="relevance">Relevance</a></li>
           </ul>
         </div>
       </div>
@@ -335,8 +376,8 @@
           <?php endforeach; ?>
         <?php else: ?>
           <div class="col-12 text-center py-5">
-            <h4 class="text-muted">No products found in this category.</h4>
-            <a href="<?php echo URLROOT; ?>/shop" class="btn btn-primary mt-3">View All Products</a>
+            <h4 class="text-muted">No products found for these filters.</h4>
+            <a href="<?php echo URLROOT; ?>/shop" class="btn btn-primary mt-3">Clear Filters</a>
           </div>
         <?php endif; ?>
 
@@ -358,8 +399,46 @@
 </div>
 
 <script>
-  // AJAX Add to Cart Logic
   document.addEventListener('DOMContentLoaded', function() {
+
+    // =======================================================
+    // --- UPDATE: NEW DYNAMIC FILTER & SORT JAVASCRIPT ---
+    // =======================================================
+    function updateURLParameter(param, value) {
+      const url = new URL(window.location.href);
+      url.searchParams.set(param, value);
+      window.location.href = url.toString();
+    }
+
+    // 1. Price Slider Logic
+    const priceRange = document.getElementById('priceRange');
+    const priceDisplay = document.getElementById('priceDisplay');
+
+    if (priceRange) {
+      priceRange.addEventListener('input', function() {
+        priceDisplay.innerText = '₹' + this.value + '+';
+      });
+
+      priceRange.addEventListener('change', function() {
+        updateURLParameter('max_price', this.value);
+      });
+    }
+
+    // 2. Sort Dropdown Logic
+    const sortOptions = document.querySelectorAll('.sort-option');
+    sortOptions.forEach(option => {
+      option.addEventListener('click', function(e) {
+        e.preventDefault();
+        const sortValue = this.getAttribute('data-sort');
+        updateURLParameter('sort', sortValue);
+      });
+    });
+    // =======================================================
+
+
+    // =======================================================
+    // --- YOUR EXISTING AJAX ADD TO CART LOGIC (UNTOUCHED) ---
+    // =======================================================
     const forms = document.querySelectorAll('.add-cart-form-clean');
 
     forms.forEach(form => {
@@ -408,6 +487,7 @@
           });
       });
     });
+
   });
 </script>
 

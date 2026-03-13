@@ -6,12 +6,10 @@
         background-color: #FBF9F1;
     }
 
-    /* NEW: Constrain the width of the main content */
+    /* Constrain the width of the main content */
     .cart-body-wrapper {
         max-width: 1100px;
-        /* Prevents it from getting too wide on large screens */
         margin: 0 auto;
-        /* Centers the block */
     }
 
     /* Table Styles */
@@ -33,8 +31,18 @@
 
     .cart-table tbody tr {
         background-color: white;
-        /* White row on cream bg */
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+    }
+
+    /* ROUNDED CORNERS FOR TABLE ROWS */
+    .cart-table tbody tr td:first-child {
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+    }
+
+    .cart-table tbody tr td:last-child {
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
     }
 
     .cart-table td {
@@ -56,6 +64,9 @@
         object-fit: contain;
         margin-right: 15px;
         border: 1px solid #eee;
+        border-radius: 8px;
+        /* Added border radius */
+        padding: 4px;
     }
 
     .cart-prod-name {
@@ -64,32 +75,54 @@
         color: #333;
     }
 
-    /* Qty Selector (Matches Shop Page) */
+    /* --- FIXED QTY SELECTOR --- */
     .cart-qty-group {
         display: flex;
         align-items: center;
-        justify-content: center;
+        justify-content: space-between;
+        /* Distributes items evenly */
         border: 1px solid #ccc;
-        width: 100px;
-        height: 35px;
+        width: 110px;
+        /* Slightly wider for padding */
+        height: 38px;
+        border-radius: 8px;
+        /* Added border radius */
+        padding: 0 4px;
+        /* Internal padding */
+        background: #fff;
     }
 
     .cart-qty-btn {
         background: transparent;
         border: none;
-        width: 30px;
+        width: 32px;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         font-size: 1.2rem;
         color: #555;
         cursor: pointer;
+        text-decoration: none;
+        border-radius: 6px;
+        /* Inner radius for hover effect */
+        transition: background-color 0.2s, color 0.2s;
+    }
+
+    .cart-qty-btn:hover {
+        background-color: #f0f0f0;
+        color: #1F4D3C;
     }
 
     .cart-qty-val {
         border: none;
-        width: 40px;
+        width: 35px;
         text-align: center;
-        font-size: 0.9rem;
+        font-size: 1rem;
+        font-weight: 600;
         background: transparent;
         -moz-appearance: textfield;
+        outline: none;
     }
 
     /* Remove Button */
@@ -111,9 +144,12 @@
         background: white;
         padding: 25px;
         border: 1px solid #eee;
+        border-radius: 12px;
+        /* Added border radius */
         position: sticky;
         top: 20px;
-        /* Sticks when scrolling */
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+        /* Soft shadow */
     }
 
     .summary-title {
@@ -153,13 +189,17 @@
         text-transform: uppercase;
         font-weight: 600;
         border: none;
+        border-radius: 8px;
+        /* Added border radius */
         margin-top: 25px;
-        transition: background 0.3s;
+        transition: background 0.3s, transform 0.2s;
     }
 
     .btn-checkout:hover {
         background-color: #1F4D3C;
         color: white;
+        transform: translateY(-2px);
+        /* Slight lift effect */
     }
 
     /* Empty Cart State */
@@ -180,20 +220,21 @@
     <div class="cart-body-wrapper">
 
         <div class="mb-4 breadcrumb">
-            <a href="<?php echo URLROOT; ?>">Home</a>
+            <a href="<?php echo URLROOT; ?>" class="text-decoration-none text-muted">Home</a>
             <span class="mx-2">&gt;</span>
-            <span>My Cart</span>
+            <span class="fw-bold text-dark">My Cart</span>
         </div>
 
         <?php if (empty($data['cart_items'])): ?>
 
-            <div class="empty-cart-container">
+            <div class="empty-cart-container bg-white" style="border-radius: 12px; border: 1px solid #eee;">
                 <div class="empty-cart-icon">
                     <i class="fas fa-shopping-basket"></i>
                 </div>
                 <h2 class="fw-bold text-muted">Your cart is empty</h2>
                 <p class="mb-4">Looks like you haven't added anything to your cart yet.</p>
-                <a href="<?php echo URLROOT; ?>/shop" class="btn btn-checkout" style="max-width: 250px;">Start Shopping</a>
+                <a href="<?php echo URLROOT; ?>/shop" class="btn btn-checkout mx-auto d-block"
+                    style="max-width: 250px; text-decoration: none;">Start Shopping</a>
             </div>
 
         <?php else: ?>
@@ -207,7 +248,7 @@
                                 <tr>
                                     <th style="width: 50%;">Product</th>
                                     <th style="width: 15%;">Price</th>
-                                    <th style="width: 20%;">Quantity</th>
+                                    <th style="width: 20%; text-align: center;">Quantity</th>
                                     <th style="width: 10%;">Total</th>
                                     <th style="width: 5%;"></th>
                                 </tr>
@@ -227,16 +268,16 @@
                                         <td><?php echo CURRENCY . $item['selling_price']; ?></td>
 
                                         <td>
-                                            <div class="cart-qty-group">
+                                            <div class="cart-qty-group mx-auto">
                                                 <a href="<?php echo URLROOT; ?>/cart/decrease/<?php echo $item['product_id']; ?>"
-                                                    class="cart-qty-btn" style="text-decoration:none; line-height:30px;">
+                                                    class="cart-qty-btn">
                                                     -
                                                 </a>
 
                                                 <input type="text" class="cart-qty-val" value="<?php echo $item['qty']; ?>" readonly>
 
                                                 <a href="<?php echo URLROOT; ?>/cart/increase/<?php echo $item['product_id']; ?>"
-                                                    class="cart-qty-btn" style="text-decoration:none; line-height:30px;">
+                                                    class="cart-qty-btn">
                                                     +
                                                 </a>
                                             </div>
@@ -270,7 +311,7 @@
 
                         <div class="summary-row">
                             <span>Estimate Delivery</span>
-                            <span>Free</span>
+                            <span class="text-success fw-bold">Free</span>
                         </div>
 
                         <div class="summary-total">

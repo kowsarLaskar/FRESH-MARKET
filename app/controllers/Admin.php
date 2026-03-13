@@ -1,18 +1,19 @@
 <?php
-class Admin extends Controller {
+class Admin extends Controller
+{
     private $adminModel; // Variable to hold the model
 
-    public function __construct() {
+    public function __construct()
+    {
         // 1. Run the Security Check
         // (Ensures only admins can see this page)
         ensureAdmin();
-        
-        // 2. Load the Model
-        // We renamed the model to 'Dashboard', so we must call it 'Dashboard' here
-        $this->adminModel = $this->model('Dashboard'); 
+
+        $this->adminModel = $this->model('Dashboard');
     }
 
-    public function index() {
+    public function index()
+    {
         // 3. Fetch Data for the Dashboard
         $data = [
             'nav' => 'dashboard',
@@ -27,17 +28,20 @@ class Admin extends Controller {
         // 4. Load the View
         $this->view('admin/index', $data);
     }
-    
+
     // Placeholder Pages (So the sidebar links don't crash)
-    public function products() {
+    public function products()
+    {
         echo "<h1>Product Management Page</h1>";
     }
 
-    public function orders() {
+    public function orders()
+    {
         echo "<h1>Order Management Page</h1>";
     }
 
-    public function delivery() {
+    public function delivery()
+    {
         echo "<h1>Delivery Management Page</h1>";
     }
 }
