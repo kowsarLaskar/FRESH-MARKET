@@ -177,11 +177,14 @@ class Users extends Controller
         $_SESSION['user_name'] = $user->full_name;
         $_SESSION['user_role'] = $user->role; // Save the role
 
+
         // Redirect based on Role
         if ($user->role == 'admin') {
             redirect('admin');
         } elseif ($user->role == 'delivery_boy') {
             redirect('delivery');
+        } elseif ($user->role == 'vendor') {
+            redirect('vendors/index');
         } else {
             redirect('pages/index');
         }
