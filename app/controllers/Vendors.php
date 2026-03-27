@@ -16,15 +16,67 @@ class Vendors extends Controller
         $this->vendorModel = $this->model('Vendor');
     }
 
-    // 1. Load the main Vendor Dashboard
+    // 1. Load the main Vendor Dashboard (NOW DYNAMIC)
     public function index()
     {
+        $vendor_id = $_SESSION['user_id'];
+
+        // Get the top 3 cards data
+        $stats = $this->vendorModel->getDashboardStats($vendor_id);
+
+        // Get the recent orders table data (We reuse your awesome getActiveOrders method!)
+        $activeOrders = $this->vendorModel->getActiveOrders($vendor_id);
+
+        // Slice the array so we only show a maximum of 5 orders on the main dashboard
+        $recentOrders = array_slice($activeOrders, 0, 5);
+
         $data = [
-            'title' => 'Vendor Dashboard'
+            'title' => 'Vendor Dashboard',
+            'stats' => $stats,
+            'recentOrders' => $recentOrders
         ];
 
         $this->view('vendors/index', $data);
     }
+
+    // ==========================================
+    // NEW PIPELINE: ACTIVE ORDERS ONLY
+    // ==========================================
+
+    // Load the specific Active Orders page
+    public function activeOrders()
+    {
+        // Calls the new model function we discussed earlier
+        $orders = $this->vendorModel->getActiveOrders($_SESSION['user_id']);
+
+        $data = [
+            'orders' => $orders
+        ];
+
+        // Loads a completely new view file
+        $this->view('vendors/active_orders', $data);
+    }
+
+    // Handle the button click specifically for Active Orders
+    public function updateActiveStatus($item_id)
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+            $new_status = trim($_POST['vendor_status']);
+
+            // Reuse your perfectly working model function!
+            if ($this->vendorModel->updateItemStatus($item_id, $new_status, $_SESSION['user_id'])) {
+                // Redirect back to the ACTIVE orders page, not the old one
+                redirect('vendors/activeOrders');
+            } else {
+                die('Something went wrong updating the status.');
+            }
+        } else {
+            redirect('vendors/activeOrders');
+        }
+    }
+
 
     // 2. Load the Vendor's specific products
     public function products()
@@ -115,5 +167,19 @@ class Vendors extends Controller
 
             $this->view('vendors/add_product', $data);
         }
+    }
+
+    // Load the Order History page
+    public function history()
+    {
+        // Call the new history model function
+        $orders = $this->vendorModel->getOrderHistory($_SESSION['user_id']);
+
+        $data = [
+            'orders' => $orders
+        ];
+
+        // Load the history view file
+        $this->view('vendors/history', $data);
     }
 }

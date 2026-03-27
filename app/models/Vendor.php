@@ -9,6 +9,32 @@ class Vendor
     $this->db = new Database();
   }
 
+  // =========================================================
+  // NEW: Fetch ONLY active (pending/processing) orders for To-Do List
+  // =========================================================
+  public function getActiveOrders($vendor_id)
+  {
+    $this->db->query('
+            SELECT 
+                oi.item_id, 
+                oi.order_id, 
+                oi.quantity, 
+                oi.price, 
+                oi.vendor_status,
+                o.order_date,
+                p.name AS product_name
+            FROM order_items oi
+            INNER JOIN orders o ON oi.order_id = o.order_id
+            INNER JOIN products p ON oi.product_id = p.product_id
+            WHERE oi.vendor_id = :vendor_id 
+            AND oi.vendor_status IN ("pending", "processing")
+            ORDER BY o.order_date ASC
+        ');
+
+    $this->db->bind(':vendor_id', $vendor_id);
+    return $this->db->resultSet();
+  }
+
   // ---------------------------------------------------------
   // 1. Fetch only the products owned by the logged-in vendor
   // ---------------------------------------------------------
@@ -110,5 +136,74 @@ class Vendor
     } else {
       return false;
     }
+  }
+
+  // =========================================================
+  // NEW: Fetch ONLY finished/dispatched orders for History Log
+  // =========================================================
+  public function getOrderHistory($vendor_id)
+  {
+    // Notice we use NOT IN to get everything that is already packed/shipped
+    // And we use ORDER BY order_date DESC so the newest are at the top
+    $this->db->query('
+            SELECT 
+                oi.item_id, 
+                oi.order_id, 
+                oi.quantity, 
+                oi.price, 
+                oi.vendor_status,
+                o.order_date,
+                p.name AS product_name
+            FROM order_items oi
+            INNER JOIN orders o ON oi.order_id = o.order_id
+            INNER JOIN products p ON oi.product_id = p.product_id
+            WHERE oi.vendor_id = :vendor_id 
+            AND oi.vendor_status NOT IN ("pending", "processing")
+            ORDER BY o.order_date DESC
+        ');
+
+    $this->db->bind(':vendor_id', $vendor_id);
+    return $this->db->resultSet();
+  }
+
+  // =========================================================
+  // NEW: Fetch aggregate stats for the main Dashboard
+  // =========================================================
+  public function getDashboardStats($vendor_id)
+  {
+    $stats = [
+      'pending_count' => 0,
+      'product_count' => 0,
+      'monthly_earnings' => 0
+    ];
+
+    // 1. Get Pending Orders Count
+    $this->db->query('SELECT COUNT(*) as count FROM order_items WHERE vendor_id = :vendor_id AND vendor_status IN ("pending", "processing")');
+    $this->db->bind(':vendor_id', $vendor_id);
+    $row1 = $this->db->single();
+    $stats['pending_count'] = $row1->count;
+
+    // 2. Get Total Inventory Count
+    $this->db->query('SELECT COUNT(*) as count FROM products WHERE vendor_id = :vendor_id');
+    $this->db->bind(':vendor_id', $vendor_id);
+    $row2 = $this->db->single();
+    $stats['product_count'] = $row2->count;
+
+    // 3. Get Monthly Earnings (Only sums completed/delivered orders for the current month)
+    $this->db->query('
+        SELECT SUM(oi.price * oi.quantity) as total 
+        FROM order_items oi
+        INNER JOIN orders o ON oi.order_id = o.order_id
+        WHERE oi.vendor_id = :vendor_id 
+        AND oi.vendor_status IN ("completed", "delivered")
+        AND MONTH(o.order_date) = MONTH(CURRENT_DATE()) 
+        AND YEAR(o.order_date) = YEAR(CURRENT_DATE())
+    ');
+    $this->db->bind(':vendor_id', $vendor_id);
+    $row3 = $this->db->single();
+    // If there are no earnings yet, prevent a null error
+    $stats['monthly_earnings'] = $row3->total ? $row3->total : 0;
+
+    return $stats;
   }
 }

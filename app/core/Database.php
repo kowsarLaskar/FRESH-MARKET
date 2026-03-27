@@ -6,7 +6,8 @@
  * Bind values
  * Return rows and results
  */
-class Database {
+class Database
+{
     private $host = DB_HOST;
     private $user = DB_USER;
     private $pass = DB_PASS;
@@ -17,32 +18,35 @@ class Database {
     private $stmt; // Statement
     private $error;
 
-    public function __construct(){
+    public function __construct()
+    {
         // Set DSN (Data Source Name)
         $dsn = 'mysql:host=' . $this->host . ';port=' . $this->port . ';dbname=' . $this->dbname;
         $options = array(
-            PDO::ATTR_PERSISTENT => true, // Increases performance
+            // PDO::ATTR_PERSISTENT => true, // Increases performance
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION // Elegant error handling
         );
 
         // Create PDO instance
-        try{
+        try {
             $this->dbh = new PDO($dsn, $this->user, $this->pass, $options);
-        } catch(PDOException $e){
+        } catch (PDOException $e) {
             $this->error = $e->getMessage();
             echo $this->error;
         }
     }
 
     // Prepare statement with query
-    public function query($sql){
+    public function query($sql)
+    {
         $this->stmt = $this->dbh->prepare($sql);
     }
 
     // Bind values
-    public function bind($param, $value, $type = null){
-        if(is_null($type)){
-            switch(true){
+    public function bind($param, $value, $type = null)
+    {
+        if (is_null($type)) {
+            switch (true) {
                 case is_int($value):
                     $type = PDO::PARAM_INT;
                     break;
@@ -60,29 +64,34 @@ class Database {
     }
 
     // Execute the prepared statement
-    public function execute(){
+    public function execute()
+    {
         return $this->stmt->execute();
     }
 
     // Get result set as array of objects
-    public function resultSet(){
+    public function resultSet()
+    {
         $this->execute();
         return $this->stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
     // Get single record as object
-    public function single(){
+    public function single()
+    {
         $this->execute();
         return $this->stmt->fetch(PDO::FETCH_OBJ);
     }
 
     // Get row count
-    public function rowCount(){
+    public function rowCount()
+    {
         return $this->stmt->rowCount();
     }
     // Get the ID of the last inserted row
     // (Crucial for getting the Order ID to save items)
-    public function lastInsertId() {
+    public function lastInsertId()
+    {
         return $this->dbh->lastInsertId();
     }
 }
